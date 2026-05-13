@@ -25,6 +25,48 @@
   --glow-btn: 0 0 28px rgba(168,85,247,.55), 0 6px 24px rgba(236,72,153,.35);
 }
 
+.light {
+  --bg:       #ffffff;
+  --bg2:      #fdfcff;
+  --bg3:      #f5f3ff; /* Very light purple tint */
+  --inp:      rgba(79, 70, 229, 0.04);
+  --inp-h:    rgba(79, 70, 229, 0.08);
+  --border:   rgba(79, 70, 229, 0.12);
+  --border-h: rgba(79, 70, 229, 0.25);
+  --text:     #1e1b4b; /* Indigo 950 */
+  --muted:    #4338ca; /* Indigo 700 */
+  --hint:     #6366f1; /* Indigo 500 */
+  --grad:     linear-gradient(135deg,#4f46e5,#7c3aed 50%,#ec4899);
+  --glow-btn: 0 10px 25px -5px rgba(79, 70, 229, 0.2);
+}
+
+.light .glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(79, 70, 229, 0.08);
+  box-shadow: 0 8px 32px rgba(79, 70, 229, 0.05);
+}
+
+.light .b1 { background: radial-gradient(ellipse, rgba(79,70,229,.12), transparent 70%); }
+.light .b2 { background: radial-gradient(ellipse, rgba(236,72,153,.1), transparent 70%); }
+.light .b3 { background: radial-gradient(ellipse, rgba(34,211,238,.06), transparent 70%); }
+
+/* Global utility fixes for light mode */
+.light .text-white:not(.keep-white) { color: var(--text) !important; }
+.light .text-slate-100:not(.keep-white) { color: var(--text) !important; }
+.light .text-slate-200:not(.keep-white) { color: var(--text) !important; }
+.light .text-slate-300:not(.keep-white) { color: var(--muted) !important; }
+.light .text-slate-400:not(.keep-white) { color: var(--muted) !important; }
+.light .text-white\/30 { color: var(--muted) !important; opacity: 0.3 !important; }
+.light .text-white\/40 { color: var(--muted) !important; opacity: 0.4 !important; }
+.light .text-white\/50 { color: var(--muted) !important; opacity: 0.5 !important; }
+.light .bg-white\/5 { background-color: rgba(79,70,229,0.03) !important; }
+.light .bg-white\/10 { background-color: rgba(79,70,229,0.06) !important; }
+.light .border-white\/5 { border-color: rgba(79,70,229,0.08) !important; }
+.light .border-white\/10 { border-color: rgba(79,70,229,0.15) !important; }
+
+.keep-white { color: #ffffff !important; }
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body {

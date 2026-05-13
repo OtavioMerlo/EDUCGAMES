@@ -187,7 +187,7 @@ const me = async (req, res) => {
         id: true, name: true, email: true, role: true, avatar: true, avatarColor: true,
         bio: true, xp: true, coins: true, level: true, streak: true,
         streakProtections: true, xpBoostActive: true, xpBoostExpiresAt: true,
-        createdAt: true, lastLoginAt: true, equippedAura: true,
+        createdAt: true, lastLoginAt: true, equippedAura: true, equippedAccessory: true,
         _count: { select: { submissions: true, purchases: true, userAchievements: true } }
       }
     });

@@ -39,16 +39,16 @@ function XpCard({ user }) {
         <div className="flex items-center gap-4 mb-5">
           <div className="w-14 h-14 rounded-2xl flex flex-col items-center justify-center flex-shrink-0 shadow-glow"
             style={{ background: 'var(--grad)' }}>
-            <span className="text-[9px] font-bold opacity-80 uppercase tracking-wider">nível</span>
-            <span className="font-display text-2xl font-bold leading-none">{level}</span>
+            <span className="text-[9px] font-bold opacity-80 uppercase tracking-wider keep-white">nível</span>
+            <span className="font-display text-2xl font-bold leading-none keep-white">{level}</span>
           </div>
           <div className="flex-1">
             <div className="text-[11px] text-[var(--muted)] uppercase tracking-wider mb-2">Experiência Total: {xp.toLocaleString('pt-BR')} XP</div>
             <div className="flex items-baseline gap-1.5 mb-2.5">
-              <span className="font-display text-3xl font-bold">{currentLevelProgress.toLocaleString('pt-BR')}</span>
+              <span className="font-display text-3xl font-bold text-[var(--text)]">{currentLevelProgress.toLocaleString('pt-BR')}</span>
               <span className="text-[var(--muted)] text-sm">/ {requiredForNextLevel.toLocaleString('pt-BR')} XP</span>
             </div>
-            <div className="h-2.5 rounded-full overflow-hidden bg-white/8">
+            <div className="h-2.5 rounded-full overflow-hidden bg-white/5 border border-white/5">
               <motion.div className="xp-bar-fill" style={{ height: '100%', borderRadius: 4 }}
                 initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 1.2, ease: 'easeOut' }}/>
             </div>
@@ -83,11 +83,11 @@ function MissionCard({ mission }) {
     <div className={`flex items-center gap-3.5 p-4 rounded-xl ${um.completed ? 'opacity-60' : ''}`}
       style={{ background: 'var(--inp)', border: '1px solid var(--border)' }}>
       <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-        style={{ background: 'rgba(124,58,237,.2)' }}>{m.emoji}</div>
+        style={{ background: 'var(--inp)', border: '1px solid var(--border)' }}>{m.emoji}</div>
       <div className="flex-1 min-w-0">
-        <div className="font-semibold text-sm mb-0.5">{m.title}</div>
+        <div className="font-semibold text-sm mb-0.5 text-[var(--text)]">{m.title}</div>
         <div className="text-xs text-[var(--muted)] mb-2">{m.description}</div>
-        <div className="h-1.5 rounded-full overflow-hidden bg-white/7">
+        <div className="h-1.5 rounded-full overflow-hidden bg-[var(--inp)] border border-[var(--border)]">
           <motion.div className="h-full rounded-full" style={{ background: um.completed ? '#10b981' : 'var(--grad)' }}
             initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8 }}/>
         </div>

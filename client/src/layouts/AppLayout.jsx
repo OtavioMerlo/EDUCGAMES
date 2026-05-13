@@ -1,8 +1,9 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   Home, BookOpen, Trophy, ShoppingBag, Star, User, History,
-  LogOut, Bell, Coins, Flame, Zap, LayoutGrid
+  LogOut, Bell, Coins, Flame, Zap, LayoutGrid, Sun, Moon
 } from 'lucide-react'
 import useAuthStore from '../store/useAuthStore'
 import { useQuery } from '@tanstack/react-query'
@@ -44,8 +45,8 @@ function XpBar({ user }) {
       <div className="flex items-center gap-2 mb-2">
         <div className="w-10 h-10 rounded-xl flex flex-col items-center justify-center flex-shrink-0 shadow-glow"
           style={{ background: 'var(--grad)' }}>
-          <span className="text-[9px] font-bold opacity-80 uppercase tracking-wider">nível</span>
-          <span className="font-display text-lg font-bold leading-none">{level}</span>
+          <span className="text-[9px] font-bold opacity-80 uppercase tracking-wider keep-white">nível</span>
+          <span className="font-display text-lg font-bold leading-none keep-white">{level}</span>
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex justify-between text-[11px] mb-1">
@@ -65,6 +66,19 @@ function XpBar({ user }) {
 export default function AppLayout() {
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
+  const [isLight, setIsLight] = useState(() => localStorage.getItem('theme') === 'light')
+
+  useEffect(() => {
+    if (isLight) {
+      document.body.classList.add('light')
+      localStorage.setItem('theme', 'light')
+    } else {
+      document.body.classList.remove('light')
+      localStorage.setItem('theme', 'dark')
+    }
+  }, [isLight])
+
+  const toggleTheme = () => setIsLight(!isLight)
 
   const { data: freshUser } = useQuery({
     queryKey: ['me'],
@@ -82,7 +96,7 @@ export default function AppLayout() {
   }
 
   return (
-    <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
+    <div className="relative min-h-screen bg-[var(--bg)] transition-colors duration-500">
       {/* Background effects */}
       <div className="blobs"><div className="blob b1"/><div className="blob b2"/><div className="blob b3"/></div>
       <div className="bg-grid"/>
@@ -91,17 +105,23 @@ export default function AppLayout() {
       <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 z-50 w-60 flex-col glass"
         style={{ borderRight: '1px solid var(--border)', padding: '24px 12px' }}>
 
-        {/* Logo */}
-        <div className="flex items-center gap-3 px-2 pb-5 mb-4 border-b border-[var(--border)]">
-          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 p-1.5 flex items-center justify-center">
-             <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+        {/* Logo + Theme Toggle */}
+        <div className="flex items-center justify-between px-2 pb-5 mb-4 border-b border-[var(--border)]">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 p-1.5 flex items-center justify-center">
+               <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+            </div>
+            <div>
+               <h1 className="font-display font-black text-xl tracking-tighter leading-none text-[var(--text)]">
+                 Educa<span className="text-[var(--purple-l)]">Games</span>
+               </h1>
+               <div className="text-[9px] uppercase font-black tracking-widest text-[var(--muted)]">TCC Edition</div>
+            </div>
           </div>
-          <div>
-             <h1 className="font-display font-black text-xl tracking-tighter leading-none text-white">
-               Educa<span className="text-[var(--purple-l)]">Games</span>
-             </h1>
-             <div className="text-[9px] uppercase font-black tracking-widest text-[var(--muted)]">TCC Edition</div>
-          </div>
+          
+          <button onClick={toggleTheme} className="p-2 rounded-xl bg-white/5 border border-white/10 text-[var(--muted)] hover:text-[var(--text)] transition-all">
+            {isLight ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
         </div>
 
         {/* XP Bar */}
@@ -152,10 +172,15 @@ export default function AppLayout() {
       {/* ── MOBILE HEADER ── */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 glass"
         style={{ borderBottom: '1px solid var(--border)' }}>
-        <span className="font-display text-lg font-bold tracking-widest">
-          <span className="text-[var(--text)]">EDUCA</span>
-          <span className="grad-text">GAMES</span>
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="font-display text-lg font-bold tracking-widest">
+            <span className="text-[var(--text)]">EDUCA</span>
+            <span className="grad-text">GAMES</span>
+          </span>
+          <button onClick={toggleTheme} className="p-2 rounded-lg bg-white/5 border border-white/10 text-[var(--muted)]">
+            {isLight ? <Moon size={16} /> : <Sun size={16} />}
+          </button>
+        </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-bold"
             style={{ background: 'rgba(245,158,11,.1)', border: '1px solid rgba(245,158,11,.3)', color: '#fbbf24' }}>

@@ -34,13 +34,23 @@
 
 ### 🎒 Novo Sistema de Inventário & Cosméticos
 - **Auras Visuais:** Personalize seu avatar com efeitos épicos (Instinto Superior, Kaioken, SSJ Blue).
+- **Acessórios Lendários:** Coleção completa de itens icônicos (Cabelos SSJ, Brincos Potara, Nuvens Akatsuki).
 - **Categorização:** Organize seus itens em Jogos, Gifts, Spotify e Cosméticos.
 - **Equipamento Instantâneo:** Troque seu visual em tempo real com persistência no banco de dados.
 
 ### ⚡ Loja24 (Evento Diário)
-- **Itens Rotativos:** Uma loja especial que muda todos os dias à meia-noite.
+- **Itens Rotativos:** Uma loja especial que muda todos os dias à meia-noite com cerimônia de abertura.
 - **Raridades:** Chance de encontrar itens Lendários e Épicos por tempo limitado.
-- **Design Imersivo:** Experiência visual estilo Cyberpunk/Retro-futurista.
+- **Animações Premium:** Efeitos de glow, partículas e respiração para itens de alta raridade.
+
+### 🏆 Hall da Fama (Ranking)
+- **Pódio Dinâmico:** Destaque em 3D para os 3 melhores colocados com coroas animadas.
+- **Exibição de Auras:** O ranking agora exibe a aparência real (aura e acessórios) de cada guerreiro.
+- **Filtros:** Alternância entre ranking Global e Semanal.
+
+### 🌗 Tematização Dinâmica
+- **Modo Escuro (Padrão):** Experiência imersiva focada em jogos.
+- **Modo Claro (Novo):** Visual "Frosted Purple" profissional com foco em legibilidade e contraste.
 
 ### 📝 Conteúdo Pedagógico
 - **Múltiplos Formatos:** Quiz, Múltipla Escolha, Texto, Verdadeiro/Falso e Upload de arquivos.
@@ -92,6 +102,7 @@ Basta clicar duas vezes no arquivo `start.bat` na raiz do projeto. Ele cuidará 
 ```bash
 cd server
 npm install
+cp .env.example .env  # Configure suas chaves no .env
 npx prisma db push
 node prisma/seed.js  # Popula o banco inicial
 npm run dev

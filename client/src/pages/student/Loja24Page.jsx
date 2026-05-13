@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Sparkles, Timer, Zap, ShoppingBag, Trophy, Flame, Info, CheckCircle2, ChevronRight, Star, Disc } from 'lucide-react'
+import { Sparkles, Timer, Zap, ShoppingBag, Trophy, Flame, Info, CheckCircle2, ChevronRight, Star, Coins } from 'lucide-react'
 import api from '../../services/api'
 import { toast } from 'react-hot-toast'
 import confetti from 'canvas-confetti'
@@ -167,7 +167,7 @@ export default function Loja24Page() {
             <div className="flex flex-col items-end">
               <span className="text-xs text-[var(--muted)] uppercase font-bold tracking-widest">Seu Saldo</span>
               <span className="text-3xl font-['Russo_One'] text-yellow-400 flex items-center gap-2">
-                <Disc className="animate-spin-slow" /> {formatCompact(user?.coins || 0)}
+                <Coins size={28} className="text-yellow-400" /> {formatCompact(user?.coins || 0)}
               </span>
             </div>
             <div className="w-px h-10 bg-white/10" />
@@ -200,7 +200,7 @@ export default function Loja24Page() {
                 <Zap fill="currentColor" />
               </div>
               <div>
-                <h4 className="font-bold text-white mb-1 uppercase">Preços Reduzidos</h4>
+                <h4 className="font-bold text-[var(--text)] mb-1 uppercase">Preços Reduzidos</h4>
                 <p className="text-sm text-[var(--muted)]">Até 80% de desconto em itens selecionados apenas na Loja24.</p>
               </div>
             </div>
@@ -209,7 +209,7 @@ export default function Loja24Page() {
                 <Star fill="currentColor" />
               </div>
               <div>
-                <h4 className="font-bold text-white mb-1 uppercase">Raridades Diárias</h4>
+                <h4 className="font-bold text-[var(--text)] mb-1 uppercase">Raridades Diárias</h4>
                 <p className="text-sm text-[var(--muted)]">Itens Épicos e Lendários aparecem com mais frequência aqui.</p>
               </div>
             </div>
@@ -218,7 +218,7 @@ export default function Loja24Page() {
                 <Trophy fill="currentColor" />
               </div>
               <div>
-                <h4 className="font-bold text-white mb-1 uppercase">Colecionismo</h4>
+                <h4 className="font-bold text-[var(--text)] mb-1 uppercase">Colecionismo</h4>
                 <p className="text-sm text-[var(--muted)]">Alguns itens são exclusivos da rotação diária e podem demorar a voltar.</p>
               </div>
             </div>
@@ -250,7 +250,7 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
         {/* Discount Badge */}
         {!isOwned && (
           <div className="absolute top-5 right-5 z-20">
-             <span className="px-3 py-1 bg-red-500 text-white text-[10px] font-black rounded-full shadow-lg shadow-red-500/50 uppercase">
+             <span className="px-3 py-1 bg-red-500 text-white keep-white text-[10px] font-black rounded-full shadow-lg shadow-red-500/50 uppercase">
                 -{item.discount}% OFF
              </span>
           </div>
@@ -259,7 +259,7 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
         {/* Owned Badge */}
         {isOwned && (
            <div className="absolute top-5 right-5 z-20">
-             <span className="px-3 py-1 bg-green-500 text-white text-[10px] font-black rounded-full shadow-lg shadow-green-500/50 uppercase flex items-center gap-1">
+             <span className="px-3 py-1 bg-green-500 text-white keep-white text-[10px] font-black rounded-full shadow-lg shadow-green-500/50 uppercase flex items-center gap-1">
                 <CheckCircle2 size={10} /> Adquirido
              </span>
           </div>
@@ -275,7 +275,9 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
         <div className="relative w-full aspect-square flex items-center justify-center mb-6">
            <motion.div animate={!isOwned ? config.animation : {}} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
              className="w-full h-full flex items-center justify-center">
-             {item.reward.category === 'COSMETIC' ? (
+             {item.reward.imageUrl ? (
+                <img src={item.reward.imageUrl} alt={item.reward.title} className="w-full h-full object-contain filter drop-shadow-2xl" />
+             ) : item.reward.category === 'COSMETIC' ? (
                 <div className="scale-150">
                   <AvatarWithAura user={{ equippedAura: item.reward.title, avatarColor: '#7c3aed' }} size="md" />
                 </div>
@@ -299,7 +301,7 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
         </div>
 
         {/* Info */}
-        <h3 className="text-white font-['Russo_One'] text-lg mb-1 leading-tight transition-all">
+        <h3 className="text-[var(--text)] font-['Russo_One'] text-lg mb-1 leading-tight transition-all">
           {item.reward.title}
         </h3>
         <p className="text-[var(--muted)] text-[10px] uppercase font-bold tracking-widest mb-6 line-clamp-1">
@@ -320,7 +322,7 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
              onClick={!isOwned ? onPurchase : undefined}
              disabled={isPurchasing || isOwned}
              className={`w-full py-3 rounded-2xl font-black uppercase text-xs tracking-[0.2em] transition-all flex items-center justify-center gap-2
-             ${isPurchasing ? 'opacity-50' : isOwned ? 'bg-white/10 text-white/40 cursor-default border border-white/10' : 'hover:scale-[1.02] active:scale-95 shadow-xl'}
+             ${isPurchasing ? 'opacity-50' : isOwned ? 'bg-white/5 text-[var(--muted)] cursor-default border border-[var(--border)]' : 'hover:scale-[1.02] active:scale-95 shadow-xl text-white keep-white'}
              `}
              style={!isOwned ? { background: config.color, color: '#000', boxShadow: `0 8px 20px ${config.color}44` } : {}}>
              {isPurchasing ? 'Processando...' : isOwned ? 'Já Possui' : 'Resgatar'}
@@ -358,7 +360,7 @@ function OpeningCeremony({ items, revealedItems, onClose }) {
          <motion.h2 
            initial={{ scale: 0.5, opacity: 0 }}
            animate={{ scale: 1, opacity: 1 }}
-           className="text-4xl md:text-6xl font-['Russo_One'] text-white uppercase tracking-tighter mb-4"
+           className="text-4xl md:text-6xl font-['Russo_One'] text-[var(--text)] uppercase tracking-tighter mb-4"
          >
            Loja Diária Atualizada
          </motion.h2>
@@ -419,12 +421,12 @@ function OpeningCeremony({ items, revealedItems, onClose }) {
                 )}
 
                 <span className="text-5xl md:text-7xl mb-4 drop-shadow-2xl">{item.reward.emoji}</span>
-                <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-center text-white/80">
+                <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-center text-[var(--text)] opacity-80">
                    {item.reward.title}
                 </span>
                 
-                <div className="mt-4 px-3 py-1 rounded-full text-[8px] md:text-[10px] font-black uppercase"
-                  style={{ background: config.color, color: '#000' }}>
+                <div className="mt-4 px-3 py-1 rounded-full text-[8px] md:text-[10px] font-black uppercase keep-white"
+                  style={{ background: config.color }}>
                    {config.label}
                 </div>
               </div>
@@ -445,7 +447,7 @@ function OpeningCeremony({ items, revealedItems, onClose }) {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           onClick={onClose}
-          className="relative z-10 mt-20 px-10 py-4 bg-white text-black font-['Russo_One'] uppercase tracking-widest rounded-full hover:scale-105 transition-transform active:scale-95 flex items-center gap-3"
+          className="relative z-10 mt-20 px-10 py-4 bg-[var(--text)] text-[var(--bg)] font-['Russo_One'] uppercase tracking-widest rounded-full hover:scale-105 transition-transform active:scale-95 flex items-center gap-3 shadow-2xl"
         >
           Explorar Ofertas <ChevronRight size={20} />
         </motion.button>
@@ -456,11 +458,11 @@ function OpeningCeremony({ items, revealedItems, onClose }) {
 
 function LojaLoading() {
   return (
-    <div className="min-h-screen bg-[#050510] flex items-center justify-center">
+    <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
        <div className="flex flex-col items-center gap-6">
           <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-            className="w-20 h-20 border-4 border-purple-500/20 border-t-purple-500 rounded-full shadow-[0_0_30px_rgba(124,58,237,0.4)]" />
-          <span className="font-['Russo_One'] text-white uppercase tracking-[0.5em] animate-pulse">Carregando Loja24...</span>
+            className="w-20 h-20 border-4 border-purple-500/20 border-t-purple-500 rounded-full shadow-glow" />
+          <span className="font-['Russo_One'] text-[var(--text)] uppercase tracking-[0.5em] animate-pulse">Carregando Loja24...</span>
        </div>
     </div>
   )

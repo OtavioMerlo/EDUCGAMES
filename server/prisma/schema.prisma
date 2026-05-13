@@ -25,7 +25,8 @@ model User {
   streakProtections Int @default(0)
   xpBoostActive Boolean @default(false)
   xpBoostExpiresAt DateTime?
-  equippedAura String?   // ID ou nome da aura equipada
+  equippedAura      String?  // ID ou nome da aura equipada
+  equippedAccessory String?  // ID ou nome do acessório equipado
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -79,7 +80,7 @@ model Reward {
   id           String   @id @default(uuid())
   title        String
   description  String
-  image        String?
+  imageUrl     String?
   emoji        String   @default("🎁")
   price        Int
   stock        Int      @default(-1) // -1 = unlimited

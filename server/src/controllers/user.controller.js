@@ -111,7 +111,7 @@ const getProfile = async (req, res) => {
       select: {
         id: true, name: true, email: true, role: true, avatar: true, avatarColor: true,
         bio: true, xp: true, coins: true, level: true, streak: true, createdAt: true,
-        equippedAura: true,
+        equippedAura: true, equippedAccessory: true,
         _count: { select: { submissions: true, purchases: true, userAchievements: true } }
       }
     });
@@ -168,4 +168,31 @@ const equipAura = async (req, res) => {
   }
 };
 
-module.exports = { awardXP, awardCoins, checkAchievements, calculateLevel, getProfile, updateProfile, equipAura };
+const equipAccessory = async (req, res) => {
+  const { accessoryId } = req.body; // title of the accessory
+  try {
+    if (accessoryId) {
+      const purchase = await prisma.purchase.findFirst({
+        where: {
+          userId: req.user.userId,
+          reward: { title: accessoryId }
+        },
+        include: { reward: true }
+      });
+      if (!purchase && req.user.role !== 'ADMIN') {
+        return res.status(403).json({ error: 'Você não possui este acessório no seu inventário.' });
+      }
+    }
+    const user = await prisma.user.update({
+      where: { id: req.user.userId },
+      data: { equippedAccessory: accessoryId || null },
+      select: { id: true, equippedAccessory: true }
+    });
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao equipar acessório.' });
+  }
+};
+
+module.exports = { awardXP, awardCoins, checkAchievements, calculateLevel, getProfile, updateProfile, equipAura, equipAccessory };

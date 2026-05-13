@@ -82,7 +82,7 @@ export default function StorePage() {
       {/* Banner Loja24 */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
         className="relative group mb-10 p-1 rounded-3xl overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600">
-        <Link to="/loja24" className="block relative bg-[#050510] rounded-[calc(1.5rem+4px)] p-6 md:p-8 overflow-hidden transition-transform group-hover:scale-[0.995]">
+        <Link to="/loja24" className="block relative bg-[var(--bg2)] rounded-[calc(1.5rem+4px)] p-6 md:p-8 overflow-hidden transition-transform group-hover:scale-[0.995]">
           {/* Effects */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-purple-600/20 blur-[100px] -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/20 blur-[100px] -ml-32 -mb-32" />
@@ -92,11 +92,11 @@ export default function StorePage() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-[10px] font-black uppercase tracking-widest border border-red-500/30 mb-4 animate-pulse">
                 <Flame size={12} fill="currentColor" /> Evento Diário Exclusivo
               </div>
-              <h2 className="text-4xl md:text-6xl font-['Russo_One'] text-white uppercase tracking-tighter leading-none mb-4">
+              <h2 className="text-4xl md:text-6xl font-['Russo_One'] text-[var(--text)] uppercase tracking-tighter leading-none mb-4">
                 Loja<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">24</span>
               </h2>
-              <p className="text-gray-400 max-w-md font-['Chakra_Petch']">
-                Ofertas raras com descontos de até <span className="text-white font-bold">80% OFF</span>. 
+              <p className="text-[var(--muted)] max-w-md">
+                Ofertas raras com descontos de até <span className="text-[var(--text)] font-bold">80% OFF</span>. 
                 Os itens mudam em 24h. Não perca!
               </p>
             </div>

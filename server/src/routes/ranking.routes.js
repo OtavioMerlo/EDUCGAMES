@@ -31,7 +31,7 @@ router.get('/', authenticate, async (req, res) => {
       const userIds = weeklyXp.map(item => item.userId);
       const users = await prisma.user.findMany({
         where: { id: { in: userIds } },
-        select: { id: true, name: true, avatarColor: true, level: true, streak: true }
+        select: { id: true, name: true, avatarColor: true, level: true, streak: true, equippedAura: true, equippedAccessory: true }
       });
 
       ranking = weeklyXp.map((item, index) => {
@@ -43,6 +43,8 @@ router.get('/', authenticate, async (req, res) => {
           level: u?.level || 1,
           avatarColor: u?.avatarColor,
           streak: u?.streak || 0,
+          equippedAura: u?.equippedAura,
+          equippedAccessory: u?.equippedAccessory,
           rank: index + 1
         };
       });
@@ -52,7 +54,7 @@ router.get('/', authenticate, async (req, res) => {
         where: { role: 'STUDENT' },
         orderBy: { xp: 'desc' },
         take: take,
-        select: { id: true, name: true, xp: true, level: true, avatarColor: true, streak: true }
+        select: { id: true, name: true, xp: true, level: true, avatarColor: true, streak: true, equippedAura: true, equippedAccessory: true }
       });
 
       ranking = globalUsers.map((u, i) => ({ ...u, rank: i + 1 }));
