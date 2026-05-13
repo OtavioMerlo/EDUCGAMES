@@ -255,9 +255,17 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
       )}
 
       <div className={`bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 h-full flex flex-col items-center text-center overflow-hidden transition-all ${isOwned ? 'bg-black/40' : ''}`}>
+        {/* Header Badges */}
+        <div className="absolute top-6 left-6 z-20">
+          <span className="text-[10px] uppercase font-black tracking-widest px-3 py-1 rounded-full border backdrop-blur-md"
+            style={{ borderColor: `${config.color}44`, color: config.color, background: `${config.color}11` }}>
+            {config.label}
+          </span>
+        </div>
+
         {/* Discount Badge */}
         {!isOwned && (
-          <div className="absolute top-5 right-5 z-20">
+          <div className="absolute top-6 right-6 z-20">
              <span className="px-3 py-1 bg-red-500 text-white keep-white text-[10px] font-black rounded-full shadow-lg shadow-red-500/50 uppercase">
                 -{item.discount}% OFF
              </span>
@@ -266,21 +274,15 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
 
         {/* Owned Badge */}
         {isOwned && (
-           <div className="absolute top-5 right-5 z-20">
+           <div className="absolute top-6 right-6 z-20">
              <span className="px-3 py-1 bg-green-500 text-white keep-white text-[10px] font-black rounded-full shadow-lg shadow-green-500/50 uppercase flex items-center gap-1">
                 <CheckCircle2 size={10} /> Adquirido
              </span>
           </div>
         )}
 
-        {/* Rarity Label */}
-        <span className="text-[10px] uppercase font-black tracking-widest mb-4 px-3 py-1 rounded-full border"
-          style={{ borderColor: `${config.color}44`, color: config.color, background: `${config.color}11` }}>
-          {config.label}
-        </span>
-
         {/* Item Preview */}
-        <div className="relative w-full aspect-square flex items-center justify-center mb-6">
+        <div className="relative w-full aspect-square flex items-center justify-center mb-6 mt-8">
            <motion.div animate={!isOwned ? config.animation : {}} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
              className="w-full h-full flex items-center justify-center">
              {item.reward.imageUrl ? (
