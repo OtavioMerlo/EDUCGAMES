@@ -89,8 +89,10 @@ export default function Loja24Page() {
       const now = new Date().getTime()
       const diff = data.nextReset - now
       if (diff <= 0) {
-        setTimeLeft('EXPIRADO')
+        setTimeLeft('EXPIRANDO...')
         clearInterval(interval)
+        // Trigger refetch and new ceremony
+        queryClient.invalidateQueries(['loja24'])
       } else {
         const h = Math.floor(diff / (1000 * 60 * 60))
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
@@ -99,7 +101,7 @@ export default function Loja24Page() {
       }
     }, 1000)
     return () => clearInterval(interval)
-  }, [data?.nextReset])
+  }, [data?.nextReset, queryClient])
 
   // Initial access ceremony
   useEffect(() => {
