@@ -4,8 +4,6 @@ node_modules/
 dist/
 build/
 .DS_Store
-*.db
-*.db-journal
 uploads/
 .cache/
 .npm/

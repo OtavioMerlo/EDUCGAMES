@@ -120,5 +120,5 @@ Acesse: [http://localhost:5173](http://localhost:5173)
 
 <div align="center">
   <p>Desenvolvido com ❤️ para transformar a educação.</p>
-  <sub>© 2024 EducaGames — Sistema Gamificado de Aprendizagem</sub>
+  <sub>© 2026 EducaGames — Sistema Gamificado de Aprendizagem</sub>
 </div>
