@@ -45,9 +45,10 @@ export default function Loja24Page() {
   const [revealedItems, setRevealedItems] = useState([])
   const [timeLeft, setTimeLeft] = useState('')
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['loja24'],
-    queryFn: () => api.get('/loja24').then(r => r.data)
+    queryFn: () => api.get('/loja24').then(r => r.data),
+    retry: 1
   })
 
   const { data: user } = useQuery({
@@ -129,6 +130,24 @@ export default function Loja24Page() {
   }, [data?.isFirstAccess, isLoading, data?.items, markSeenMutation])
 
   if (isLoading) return <LojaLoading />
+
+  if (error) return (
+    <div className="min-h-screen bg-[#050510] flex items-center justify-center p-4">
+       <div className="bg-white/5 border border-white/10 p-8 rounded-3xl text-center max-w-md backdrop-blur-xl">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h2 className="text-white font-['Russo_One'] text-xl mb-2">Erro ao Sincronizar</h2>
+          <p className="text-[var(--muted)] text-sm mb-6">
+            Não conseguimos carregar suas ofertas personalizadas. Isso geralmente acontece após uma atualização do sistema.
+          </p>
+          <button 
+            onClick={() => window.location.href = '/login'}
+            className="w-full py-3 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-colors"
+          >
+            Fazer Login Novamente
+          </button>
+       </div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen pb-20 relative overflow-hidden font-['Chakra_Petch']">
