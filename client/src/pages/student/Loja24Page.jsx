@@ -105,22 +105,28 @@ export default function Loja24Page() {
 
   // Initial access ceremony
   useEffect(() => {
-    if (data?.isFirstAccess && !isLoading) {
+    if (data?.isFirstAccess && !isLoading && !showCeremony) {
       setShowCeremony(true)
+      
+      const timeouts = []
+      
       // Reveal items one by one
-      let timeout;
       data.items.forEach((item, index) => {
-         timeout = setTimeout(() => {
+         const t = setTimeout(() => {
             setRevealedItems(prev => [...prev, item.id])
          }, 1500 + (index * 1200))
+         timeouts.push(t)
       })
       
-      // Mark as seen after ceremony
-      setTimeout(() => {
+      // Mark as seen after ceremony (8s approx)
+      const finalT = setTimeout(() => {
          markSeenMutation.mutate()
-      }, 8000)
+      }, 10000)
+      timeouts.push(finalT)
+
+      return () => timeouts.forEach(t => clearTimeout(t))
     }
-  }, [data, isLoading])
+  }, [data?.isFirstAccess, isLoading, data?.items, markSeenMutation])
 
   if (isLoading) return <LojaLoading />
 

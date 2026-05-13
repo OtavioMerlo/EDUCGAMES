@@ -37,6 +37,7 @@ model User {
   notifications   Notification[]
   activitiesCreated Activity[] @relation("CreatedBy")
   refreshTokens   RefreshToken[]
+  dailyStoreItems DailyStoreItem[]
 }
 
 model Activity {
@@ -111,6 +112,7 @@ model Purchase {
 
 model DailyStoreItem {
   id           String   @id @default(uuid())
+  userId       String   // Identificador do usuário para loja individual
   rewardId     String
   price        Int      // Preço promocional
   originalPrice Int     // Preço original para exibir desconto
@@ -119,8 +121,9 @@ model DailyStoreItem {
   createdAt    DateTime @default(now())
 
   reward       Reward   @relation(fields: [rewardId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
 
-  @@unique([rewardId, date])
+  @@unique([userId, rewardId, date])
 }
 
 model Achievement {

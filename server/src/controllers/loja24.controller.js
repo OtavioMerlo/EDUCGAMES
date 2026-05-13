@@ -8,13 +8,16 @@ const getLoja24Items = async (req, res) => {
 
   try {
     let items = await prisma.dailyStoreItem.findMany({
-      where: { date: today },
+      where: { 
+        date: today,
+        userId: userId // Individualize por usuário
+      },
       include: { reward: true }
     });
 
-    // Se não houver itens para hoje, gera novos
+    // Se não houver itens para hoje para este usuário, gera novos
     if (items.length === 0) {
-      items = await generateDailyItems(today);
+      items = await generateDailyItems(today, userId);
     }
 
     // Verificar se o usuário já viu a loja hoje para a animação
@@ -113,7 +116,7 @@ const purchaseLoja24Item = async (req, res) => {
 
 // --- Helpers ---
 
-async function generateDailyItems(date) {
+async function generateDailyItems(date, userId) {
   const rewards = await prisma.reward.findMany({ where: { isActive: true } });
   if (rewards.length < 5) return [];
 
@@ -139,6 +142,7 @@ async function generateDailyItems(date) {
     const price = Math.round(chosen.price * (1 - discountInfo.percent / 100));
 
     selectedItems.push({
+      userId, // Associar ao usuário
       rewardId: chosen.id,
       originalPrice: chosen.price,
       price,
