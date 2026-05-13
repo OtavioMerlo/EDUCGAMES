@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Sparkles, Timer, Zap, ShoppingBag, Trophy, Flame, Info, CheckCircle2, ChevronRight, Star, Coins } from 'lucide-react'
@@ -44,6 +44,7 @@ export default function Loja24Page() {
   const [showCeremony, setShowCeremony] = useState(false)
   const [revealedItems, setRevealedItems] = useState([])
   const [timeLeft, setTimeLeft] = useState('')
+  const ceremonyStarted = useRef(false)
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['loja24'],
@@ -106,28 +107,31 @@ export default function Loja24Page() {
 
   // Initial access ceremony
   useEffect(() => {
-    if (data?.isFirstAccess && !isLoading && !showCeremony) {
+    if (data?.isFirstAccess && !isLoading && !ceremonyStarted.current) {
+      ceremonyStarted.current = true
       setShowCeremony(true)
       
       const timeouts = []
       
       // Reveal items one by one
-      data.items.forEach((item, index) => {
-         const t = setTimeout(() => {
-            setRevealedItems(prev => [...prev, item.id])
-         }, 1500 + (index * 1200))
-         timeouts.push(t)
-      })
-      
-      // Mark as seen after ceremony (8s approx)
-      const finalT = setTimeout(() => {
-         markSeenMutation.mutate()
-      }, 10000)
-      timeouts.push(finalT)
+        data.items.forEach((item, index) => {
+           const t = setTimeout(() => {
+              setRevealedItems(prev => [...prev, item.id])
+           }, 1500 + (index * 1200))
+           timeouts.push(t)
+        })
+        
+        // Mark as seen after ceremony
+        const finalT = setTimeout(() => {
+           markSeenMutation.mutate()
+        }, 2000 + (data.items.length * 1200))
+        timeouts.push(finalT)
 
-      return () => timeouts.forEach(t => clearTimeout(t))
+      return () => {
+        timeouts.forEach(t => clearTimeout(t))
+      }
     }
-  }, [data?.isFirstAccess, isLoading, data?.items, markSeenMutation])
+  }, [data?.isFirstAccess, isLoading, data?.items?.length]) // Reduzido dependências
 
   if (isLoading) return <LojaLoading />
 
@@ -163,6 +167,7 @@ export default function Loja24Page() {
           <OpeningCeremony 
             items={data?.items || []} 
             revealedItems={revealedItems} 
+            ownedRewardIds={ownedRewardIds}
             onClose={() => setShowCeremony(false)} 
           />
         )}
@@ -362,7 +367,7 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
   )
 }
 
-function OpeningCeremony({ items, revealedItems, onClose }) {
+function OpeningCeremony({ items, revealedItems, onClose, ownedRewardIds }) {
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -401,9 +406,11 @@ function OpeningCeremony({ items, revealedItems, onClose }) {
 
       <div className="relative z-10 flex flex-wrap justify-center gap-4 md:gap-8 max-w-6xl">
         {items.map((item, idx) => {
+          if (!item.reward) return null
+          
           const isRevealed = revealedItems.includes(item.id)
-          const config = RARITY_CONFIG[item.reward.rarity]
-          const isOwned = ownedRewardIds.has(item.rewardId)
+          const config = RARITY_CONFIG[item.reward.rarity] || RARITY_CONFIG.COMMON
+          const isOwned = ownedRewardIds?.has?.(item.rewardId) || false
           
           return (
             <motion.div 

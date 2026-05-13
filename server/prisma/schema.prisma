@@ -8,217 +8,205 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  name         String
-  email        String   @unique
-  password     String
-  role         String   @default("STUDENT") // STUDENT | TEACHER | ADMIN
-  avatar       String?
-  avatarColor  String   @default("#7c3aed")
-  bio          String?
-  xp           Int      @default(0)
-  coins        Int      @default(0)
-  level        Int      @default(1)
-  streak       Int      @default(0)
-  lastLoginAt  DateTime?
-  lastLoja24Seen DateTime? // Para controlar animação de primeiro acesso do dia
-  streakProtections Int @default(0)
-  xpBoostActive Boolean @default(false)
-  xpBoostExpiresAt DateTime?
-  equippedAura      String?  // ID ou nome da aura equipada
-  equippedAccessory String?  // ID ou nome do acessório equipado
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  submissions     ActivitySubmission[]
-  purchases       Purchase[]
-  userAchievements UserAchievement[]
-  userMissions    UserMission[]
-  notifications   Notification[]
-  activitiesCreated Activity[] @relation("CreatedBy")
-  refreshTokens   RefreshToken[]
-  dailyStoreItems DailyStoreItem[]
+  id                String               @id @default(uuid())
+  name              String
+  email             String               @unique
+  password          String
+  role              String               @default("STUDENT")
+  avatar            String?
+  avatarColor       String               @default("#7c3aed")
+  bio               String?
+  xp                Int                  @default(0)
+  coins             Int                  @default(0)
+  level             Int                  @default(1)
+  streak            Int                  @default(0)
+  lastLoginAt       DateTime?
+  lastLoja24Seen    DateTime?
+  streakProtections Int                  @default(0)
+  xpBoostActive     Boolean              @default(false)
+  xpBoostExpiresAt  DateTime?
+  equippedAura      String?
+  equippedAccessory String?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  activitiesCreated Activity[]           @relation("CreatedBy")
+  submissions       ActivitySubmission[]
+  dailyStoreItems   DailyStoreItem[]
+  notifications     Notification[]
+  purchases         Purchase[]
+  refreshTokens     RefreshToken[]
+  userAchievements  UserAchievement[]
+  userMissions      UserMission[]
 }
 
 model Activity {
-  id           String   @id @default(uuid())
-  title        String
-  description  String
-  type         String   @default("TEXT") // TEXT | QUIZ | UPLOAD | MULTIPLE_CHOICE | TRUE_FALSE
-  difficulty   String   @default("EASY") // EASY | MEDIUM | HARD
-  subject      String
-  xpReward     Int      @default(10)
-  coinReward   Int      @default(5)
-  content      String   // JSON string with activity content
-  isActive     Boolean  @default(true)
-  dueDate      DateTime?
-  createdBy    String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  creator      User     @relation("CreatedBy", fields: [createdBy], references: [id])
-  submissions  ActivitySubmission[]
+  id          String               @id @default(uuid())
+  title       String
+  description String
+  type        String               @default("TEXT")
+  difficulty  String               @default("EASY")
+  subject     String
+  xpReward    Int                  @default(10)
+  coinReward  Int                  @default(5)
+  content     String
+  isActive    Boolean              @default(true)
+  dueDate     DateTime?
+  createdBy   String
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  creator     User                 @relation("CreatedBy", fields: [createdBy], references: [id])
+  submissions ActivitySubmission[]
 }
 
 model ActivitySubmission {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   userId       String
   activityId   String
-  status       String   @default("PENDING") // PENDING | APPROVED | REJECTED | GRADED
+  status       String    @default("PENDING")
   score        Float?
-  answer       String?  // JSON string
+  answer       String?
   feedback     String?
-  xpAwarded    Int      @default(0)
-  coinsAwarded Int      @default(0)
-  submittedAt  DateTime @default(now())
+  xpAwarded    Int       @default(0)
+  coinsAwarded Int       @default(0)
+  submittedAt  DateTime  @default(now())
   gradedAt     DateTime?
-
-  user         User     @relation(fields: [userId], references: [id])
-  activity     Activity @relation(fields: [activityId], references: [id])
+  activity     Activity  @relation(fields: [activityId], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
 }
 
 model Reward {
-  id           String   @id @default(uuid())
-  title        String
-  description  String
-  imageUrl     String?
-  emoji        String   @default("🎁")
-  price        Int
-  stock        Int      @default(-1) // -1 = unlimited
-  category     String   @default("OTHER") // GAME | SUBSCRIPTION | GIFT_CARD | ITEM | COSMETIC
-  rarity       String   @default("COMMON") // COMMON | RARE | EPIC | LEGENDARY
-  isActive     Boolean  @default(true)
-  isLimited    Boolean  @default(false)
-  expiresAt    DateTime?
-  bgGradient   String   @default("linear-gradient(135deg,#1a0a3d,#2d0a4e)")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  purchases       Purchase[]
+  id              String           @id @default(uuid())
+  title           String
+  description     String
+  imageUrl        String?
+  emoji           String           @default("🎁")
+  price           Int
+  stock           Int              @default(-1)
+  category        String           @default("OTHER")
+  rarity          String           @default("COMMON")
+  isActive        Boolean          @default(true)
+  isLimited       Boolean          @default(false)
+  expiresAt       DateTime?
+  bgGradient      String           @default("linear-gradient(135deg,#1a0a3d,#2d0a4e)")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   dailyStoreItems DailyStoreItem[]
+  purchases       Purchase[]
 }
 
 model Purchase {
-  id           String   @id @default(uuid())
-  userId       String
-  rewardId     String
-  coinsSpent   Int
-  status       String   @default("COMPLETED") // COMPLETED | PENDING | CANCELLED
-  createdAt    DateTime @default(now())
-
-  user         User     @relation(fields: [userId], references: [id])
-  reward       Reward   @relation(fields: [rewardId], references: [id])
+  id         String   @id @default(uuid())
+  userId     String
+  rewardId   String
+  coinsSpent Int
+  status     String   @default("COMPLETED")
+  createdAt  DateTime @default(now())
+  reward     Reward   @relation(fields: [rewardId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model DailyStoreItem {
-  id           String   @id @default(uuid())
-  userId       String   // Identificador do usuário para loja individual
-  rewardId     String
-  price        Int      // Preço promocional
-  originalPrice Int     // Preço original para exibir desconto
-  discount     Int      // Porcentagem de desconto
-  date         String   // YYYY-MM-DD (ex: 2024-05-12)
-  createdAt    DateTime @default(now())
-
-  reward       Reward   @relation(fields: [rewardId], references: [id])
-  user         User     @relation(fields: [userId], references: [id])
+  id            String   @id @default(uuid())
+  userId        String
+  rewardId      String
+  price         Int
+  originalPrice Int
+  discount      Int
+  date          String
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id])
+  reward        Reward   @relation(fields: [rewardId], references: [id])
 
   @@unique([userId, rewardId, date])
 }
 
 model Achievement {
-  id           String   @id @default(uuid())
-  title        String
-  description  String
-  emoji        String   @default("🏆")
-  rarity       String   @default("COMMON")
-  xpRequired   Int      @default(0)
-  coinsRequired Int     @default(0)
-  activitiesRequired Int @default(0)
-  streakRequired Int    @default(0)
-  xpBonus      Int      @default(0)
-  coinBonus    Int      @default(0)
-  condition    String   @default("XP") // XP | COINS | ACTIVITIES | STREAK | LEVEL | SPECIAL
-  conditionValue Int    @default(0)
-  createdAt    DateTime @default(now())
-
-  userAchievements UserAchievement[]
+  id                 String            @id @default(uuid())
+  title              String
+  description        String
+  emoji              String            @default("🏆")
+  rarity             String            @default("COMMON")
+  xpRequired         Int               @default(0)
+  coinsRequired      Int               @default(0)
+  activitiesRequired Int               @default(0)
+  streakRequired     Int               @default(0)
+  xpBonus            Int               @default(0)
+  coinBonus          Int               @default(0)
+  condition          String            @default("XP")
+  conditionValue     Int               @default(0)
+  createdAt          DateTime          @default(now())
+  userAchievements   UserAchievement[]
 }
 
 model UserAchievement {
-  id            String   @id @default(uuid())
+  id            String      @id @default(uuid())
   userId        String
   achievementId String
-  unlockedAt    DateTime @default(now())
-
-  user          User        @relation(fields: [userId], references: [id])
+  unlockedAt    DateTime    @default(now())
   achievement   Achievement @relation(fields: [achievementId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
 
   @@unique([userId, achievementId])
 }
 
 model DailyMission {
-  id           String   @id @default(uuid())
+  id           String        @id @default(uuid())
   title        String
   description  String
-  emoji        String   @default("🎯")
-  type         String   // LOGIN | ACTIVITIES | XP | QUIZ | STREAK
-  targetValue  Int      @default(1)
-  xpReward     Int      @default(20)
-  coinReward   Int      @default(10)
-  isActive     Boolean  @default(true)
-
+  emoji        String        @default("🎯")
+  type         String
+  targetValue  Int           @default(1)
+  xpReward     Int           @default(20)
+  coinReward   Int           @default(10)
+  isActive     Boolean       @default(true)
   userMissions UserMission[]
 }
 
 model UserMission {
-  id            String   @id @default(uuid())
-  userId        String
-  missionId     String
-  progress      Int      @default(0)
-  completed     Boolean  @default(false)
-  completedAt   DateTime?
-  date          String   // YYYY-MM-DD
-  xpAwarded     Int      @default(0)
-  coinsAwarded  Int      @default(0)
-
-  user          User         @relation(fields: [userId], references: [id])
-  mission       DailyMission @relation(fields: [missionId], references: [id])
+  id           String       @id @default(uuid())
+  userId       String
+  missionId    String
+  progress     Int          @default(0)
+  completed    Boolean      @default(false)
+  completedAt  DateTime?
+  date         String
+  xpAwarded    Int          @default(0)
+  coinsAwarded Int          @default(0)
+  mission      DailyMission @relation(fields: [missionId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
 
   @@unique([userId, missionId, date])
 }
 
 model Notification {
-  id           String   @id @default(uuid())
-  userId       String
-  title        String
-  message      String
-  type         String   @default("INFO") // INFO | XP | COINS | ACHIEVEMENT | LEVEL_UP | REWARD
-  emoji        String   @default("🔔")
-  isRead       Boolean  @default(false)
-  data         String?  // JSON
-  createdAt    DateTime @default(now())
-
-  user         User     @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("INFO")
+  emoji     String   @default("🔔")
+  isRead    Boolean  @default(false)
+  data      String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model RefreshToken {
-  id           String   @id @default(uuid())
-  userId       String
-  token        String   @unique
-  expiresAt    DateTime
-  createdAt    DateTime @default(now())
-
-  user         User     @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model AuditLog {
-  id           String   @id @default(uuid())
-  userId       String?
-  action       String
-  entity       String?
-  entityId     String?
-  details      String?  // JSON
-  ip           String?
-  createdAt    DateTime @default(now())
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  entity    String?
+  entityId  String?
+  details   String?
+  ip        String?
+  createdAt DateTime @default(now())
 }
