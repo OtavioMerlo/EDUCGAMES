@@ -2,6 +2,7 @@
   "name": "educagames-client",
   "private": true,
   "version": "1.0.0",
+  "author": "Otavio Merlo Carvalho 2026",
   "type": "module",
   "scripts": {
     "dev": "vite",

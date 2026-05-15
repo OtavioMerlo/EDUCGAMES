@@ -44,6 +44,21 @@ export const AURAS = {
     glow: '#22c55e', glow2: '#f0fdf4', type: 'aggressive',
     rarity: 'EPIC', label: 'Broly', icon: '🍏'
   },
+  'Aura Ultra Ego': {
+    particles: { colors: ['124,58,237', '192,38,211', '76,29,149'], count: 65, speed: 1.1 },
+    glow: '#7c3aed', glow2: '#c026d3', type: 'ultra-ego',
+    rarity: 'LEGENDARY', label: 'Ultra Ego', icon: '👿'
+  },
+  'Aura Beast Gohan': {
+    particles: { colors: ['226,232,240', '255,255,255', '167,139,250'], count: 70, speed: 0.9 },
+    glow: '#e2e8f0', glow2: '#a78bfa', type: 'beast',
+    rarity: 'LEGENDARY', label: 'Beast', icon: '🧬'
+  },
+  'Aura Black Cosmic': {
+    particles: { colors: ['15,23,42', '124,58,237', '251,191,36'], count: 80, speed: 1.4 },
+    glow: '#0f172a', glow2: '#7c3aed', type: 'cosmic',
+    rarity: 'LEGENDARY', label: 'Cosmic', icon: '🌌'
+  },
 
   // ── Naruto Chakra Modes ──
   'Modo Chakra Básico': {
@@ -107,6 +122,22 @@ export const AURAS = {
     glow: '#06b6d4', glow2: '#0891b2', type: 'particles',
     rarity: 'COMMON', label: 'Fogos Azuis', icon: '🎇'
   },
+  // ── Hero / Fantasy Auras ──
+  'Aura Banguela': {
+    particles: { colors: ['10,10,20', '88,28,135', '59,130,246'], count: 60, speed: 0.4 },
+    glow: '#581c87', glow2: '#000000', type: 'plasma',
+    rarity: 'LEGENDARY', label: 'Fúria da Noite', icon: '🐲'
+  },
+  'Aura Arqueiro Verde': {
+    particles: { colors: ['21,128,61', '34,197,94', '187,247,208'], count: 55, speed: 1.2 },
+    glow: '#15803d', glow2: '#14532d', type: 'aggressive',
+    rarity: 'EPIC', label: 'Justiça Verde', icon: '🏹'
+  },
+  'Aura Iron Man': {
+    particles: { colors: ['239,68,68', '234,179,8', '254,240,138'], count: 65, speed: 0.9 },
+    glow: '#ef4444', glow2: '#eab308', type: 'ironman',
+    rarity: 'LEGENDARY', label: 'Protocolo Stark', icon: '🤖'
+  },
 }
 
 export const ACCESSORIES = {
@@ -148,6 +179,12 @@ export const ACCESSORIES = {
   'Gohan SSJ1': { type: 'image', src: '/acessorios/gonhassj1.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Goku Base': { type: 'image', src: '/acessorios/goku.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Goku God Full': { type: 'image', src: '/acessorios/gokugod.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
+  // Hero / Fantasy Accessories
+  'Banguela': { type: 'image', src: '/acessorios/banguela.png', pos: { inset: '-25%' }, rarity: 'LEGENDARY' },
+  'Banguela Fúria': { type: 'image', src: '/acessorios/banguela2.png', pos: { inset: '-30%' }, rarity: 'LEGENDARY' },
+  'Arqueiro Verde': { type: 'image', src: '/acessorios/arqueiro_verde.png', pos: { inset: '-25%' }, rarity: 'EPIC' },
+  'Iron Man Clássico': { type: 'image', src: '/acessorios/ironman.png', pos: { inset: '-30%' }, rarity: 'LEGENDARY' },
+  'Iron Man Mark 85': { type: 'image', src: '/acessorios/ironman2.png', pos: { inset: '-30%' }, rarity: 'LEGENDARY' },
   'Goku SSJ1 Full': { type: 'image', src: '/acessorios/ssj1 goku.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Sasuke Uchiha': { type: 'image', src: '/acessorios/sasuke.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Vegeta SSJ1': { type: 'image', src: '/acessorios/vegetassj1.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
@@ -397,6 +434,42 @@ export default function AvatarWithAura({ user, size = 'md', className = '', show
         <>
           <GlowRing color="#e03030" delay={0} duration={0.8} />
           <GlowRing color="#8b0000" delay={0.4} duration={0.8} />
+        </>
+      )
+      case 'ironman': return (
+        <>
+          <GlowRing color="#38bdf8" delay={0} duration={1.2} />
+          <GlowRing color="#fbbf24" delay={0.6} duration={1.2} />
+          <motion.div className="absolute inset-0 rounded-full border-2 border-sky-400/20"
+            animate={{ opacity: [0, 0.4, 0], scale: [0.8, 1.2] }} transition={{ duration: 2, repeat: Infinity }} />
+        </>
+      )
+      case 'plasma': return (
+        <div className="absolute inset-0 rounded-full bg-gradient-to-t from-purple-900/40 to-blue-900/20 blur-xl animate-pulse" />
+      )
+      case 'ultra-ego': return (
+        <>
+          <GlowRing color="#c026d3" delay={0} duration={1} />
+          <div className="absolute inset-0 bg-purple-900/20 animate-pulse rounded-full" />
+        </>
+      )
+      case 'beast': return (
+        <>
+          <GlowRing color="#ffffff" delay={0} duration={1.5} />
+          <div className="absolute inset-[-20%] pointer-events-none">
+             <motion.div className="absolute inset-0 border-[3px] border-purple-500/40 rounded-full" 
+               animate={{ scale: [0.9, 1.2], opacity: [0, 0.5, 0] }} transition={{ duration: 1, repeat: Infinity }} />
+          </div>
+        </>
+      )
+      case 'cosmic': return (
+        <>
+          <GlowRing color="#fbbf24" delay={0} duration={2} />
+          <GlowRing color="#7c3aed" delay={1} duration={2} />
+          <div className="absolute inset-0 overflow-hidden rounded-full">
+            <motion.div className="absolute w-[200%] h-[200%] top-[-50%] left-[-50%] bg-[radial-gradient(circle,rgba(124,58,237,0.1)_0%,transparent_50%)]" 
+              animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: 'linear' }} />
+          </div>
         </>
       )
       default: return null

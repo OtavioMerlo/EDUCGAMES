@@ -2,6 +2,7 @@
   "name": "educagames-server",
   "version": "1.0.0",
   "description": "EducaGames Backend API",
+  "author": "Otavio Merlo Carvalho 2026",
   "main": "src/app.js",
   "scripts": {
     "dev": "nodemon src/app.js",

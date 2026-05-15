@@ -186,7 +186,7 @@ export default function Loja24Page() {
                   <Timer size={12} /> {timeLeft} restante
                </div>
             </div>
-            <h1 className="text-5xl md:text-7xl font-['Russo_One'] text-white uppercase tracking-tighter leading-none">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-['Russo_One'] text-white uppercase tracking-tighter leading-none">
                LOJA<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">24</span>
             </h1>
             <p className="text-[var(--muted)] text-lg mt-4 max-w-xl">

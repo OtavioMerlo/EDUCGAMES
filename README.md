@@ -114,6 +114,6 @@ A plataforma conta com um design **Frosted Glass** (vidro jateado), animações 
 ---
 
 <div align="center">
-  <p>Desenvolvido para o Trabalho de Conclusão de Curso (TCC).</p>
-  <sub>© 2026 EducaGames — A educação nunca foi tão divertida.</sub>
+  <p>Desenvolvido por <strong>Otávio Merlo Carvalho (2026)</strong> para o Trabalho de Conclusão de Curso (TCC).</p>
+  <sub>© 2026 EducaGames — Todos os direitos reservados.</sub>
 </div>

@@ -16,7 +16,12 @@ import {
   XPBar, RankBadge, StatCard, AchievementCard, ProfileBanner, ActivityFeedItem
 } from '../../components/ui/ProfileComponents'
 
-const AVATAR_COLORS = ['#7c3aed','#ec4899','#22d3ee','#10b981','#f59e0b','#6366f1','#ef4444','#06b6d4','#a855f7','#f97316']
+const AVATAR_COLORS = [
+  '#7c3aed', '#ec4899', '#22d3ee', '#10b981', '#f59e0b', 
+  '#6366f1', '#ef4444', '#06b6d4', '#a855f7', '#f97316',
+  '#000000', '#ffffff', '#475569', '#fb7185', '#d946ef',
+  '#818cf8', '#a3e635', '#52525b', '#4c1d95', '#991b1b'
+]
 
 const TABS = [
   { id: 'overview',     label: 'Visão Geral',  icon: User },

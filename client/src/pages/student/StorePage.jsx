@@ -42,7 +42,7 @@ export default function StorePage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['rewards', cat],
-    queryFn: () => api.get('/rewards', { params: { category: cat || undefined, limit: 50 } }).then(r => r.data)
+    queryFn: () => api.get('/rewards', { params: { category: cat || undefined, limit: 1000 } }).then(r => r.data)
   })
 
   // Criar um Set com os IDs das recompensas que o usuário já possui

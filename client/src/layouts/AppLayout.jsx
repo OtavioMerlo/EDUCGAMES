@@ -219,8 +219,8 @@ export default function AppLayout() {
 
       {/* ── MOBILE BOTTOM NAV ── */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex glass items-end"
-        style={{ borderTop: '1px solid var(--border)', padding: '6px 0' }}>
-        {navItems.filter(i => !['/history', '/profile', '/achievements', '/ranking', '/store'].includes(i.to)).map(({ to, icon: Icon, label, isSpecial }) => (
+        style={{ borderTop: '1px solid var(--border)', padding: '6px 0', paddingBottom: 'calc(6px + env(safe-area-inset-bottom))' }}>
+        {navItems.filter(i => ['/dashboard', '/activities', '/loja24', '/store', '/players'].includes(i.to)).map(({ to, icon: Icon, label, isSpecial }) => (
           <NavLink key={to} to={to} className={({ isActive }) =>
             `flex-1 flex flex-col items-center gap-1 py-2 text-[10px] font-semibold tracking-wide transition-all ${
               isSpecial ? 'mb-2' : ''
@@ -239,7 +239,7 @@ export default function AppLayout() {
             <span className={isSpecial ? 'mt-1' : ''}>{label}</span>
           </NavLink>
         ))}
-        {/* Profile extra item for mobile */}
+        {/* Profile item */}
         <NavLink to="/profile" className={({ isActive }) =>
           `flex-1 flex flex-col items-center gap-1 py-2 text-[10px] font-semibold tracking-wide transition-colors ${isActive ? 'text-[var(--purple-l)]' : 'text-[var(--muted)]'}`}>
           <User size={20} strokeWidth={1.8} />

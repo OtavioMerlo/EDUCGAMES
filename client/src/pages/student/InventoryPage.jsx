@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, forwardRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -23,6 +23,7 @@ const TABS = [
   { id: 'GAME',         label: 'Jogos',       icon: Gamepad2,   color: '#60a5fa' },
   { id: 'GIFT_CARD',    label: 'Gifts',       icon: Gift,       color: '#f472b6' },
   { id: 'SUBSCRIPTION', label: 'Serviços',    icon: Music,      color: '#34d399' },
+  { id: 'ITEM',         label: 'Outros',      icon: ShieldCheck, color: '#94a3b8' },
 ]
 
 export default function InventoryPage() {
@@ -93,10 +94,15 @@ export default function InventoryPage() {
         {/* ── SIDEBAR ── */}
         <aside className="space-y-4">
           {/* Search */}
-          <div className="relative">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)] opacity-50" />
-            <input type="text" placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)}
-              className="w-full bg-[var(--inp)] border border-[var(--border)] rounded-2xl py-2.5 pl-10 pr-4 text-sm text-[var(--text)] outline-none focus:border-[var(--purple-l)]/50 transition-all" />
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--muted)] group-focus-within:text-[var(--purple-l)] transition-colors" size={16} />
+            <input
+              type="text"
+              placeholder="Pesquisar no baú..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:bg-white/10 transition-all"
+            />
           </div>
 
           {/* Category tabs */}
@@ -159,7 +165,7 @@ export default function InventoryPage() {
                 {items.map(item => {
                   const r = item.reward
                   const isAura = r.category === 'COSMETIC'
-                  const isAcc = r.category === 'ACCESSORY'
+                  const isAcc = r.category === 'ACCESSORY' || r.category === 'ITEM'
                   const canEquip = isAura || isAcc
                   const isEq = isAura ? p?.equippedAura === r.title : isAcc ? p?.equippedAccessory === r.title : false
                   return (
@@ -189,12 +195,13 @@ export default function InventoryPage() {
   )
 }
 
-function ItemCard({ reward: r, isEquipped, canEquip, isAura, isBusy, onEquip }) {
+const ItemCard = forwardRef(({ reward: r, isEquipped, canEquip, isAura, isBusy, onEquip }, ref) => {
   const rar = RARITY[r.rarity] || RARITY.COMMON
   const isLegendary = r.rarity === 'LEGENDARY'
 
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -270,4 +277,4 @@ function ItemCard({ reward: r, isEquipped, canEquip, isAura, isBusy, onEquip }) 
       </div>
     </motion.div>
   )
-}
+})
