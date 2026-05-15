@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast'
 import confetti from 'canvas-confetti'
 import AvatarWithAura from '../../components/ui/AvatarWithAura'
 import { formatCompact } from '../../utils/format'
+import RewardImage from '../../components/ui/RewardImage'
 
 const RARITY_CONFIG = {
   COMMON: { 
@@ -273,12 +274,10 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
       className={`group relative ${isOwned ? 'opacity-70 grayscale-[0.5]' : ''}`}
     >
       {/* Glow Effect */}
-      {!isOwned && (
-        <div className="absolute inset-0 -z-10 rounded-[2.5rem] transition-all duration-500 group-hover:opacity-100 opacity-50"
-          style={{ boxShadow: config.glow, background: config.bg }} />
-      )}
-
-      <div className={`bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 h-full flex flex-col items-center text-center overflow-hidden transition-all ${isOwned ? 'bg-black/40' : ''}`}>
+      <div className={`bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 h-full flex flex-col items-center text-center overflow-hidden transition-all ${
+        isOwned ? 'bg-black/40' : item.reward.category === 'SUBSCRIPTION' ? 'premium-service-card' : ''
+      }`}>
+        {item.reward.category === 'SUBSCRIPTION' && <div className="service-glow" />}
         {/* Header Badges */}
         <div className="absolute top-6 left-6 z-20">
           <span className="text-[10px] uppercase font-black tracking-widest px-3 py-1 rounded-full border backdrop-blur-md"
@@ -309,15 +308,15 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
         <div className="relative w-full aspect-square flex items-center justify-center mb-6 mt-8">
            <motion.div animate={!isOwned ? config.animation : {}} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
              className="w-full h-full flex items-center justify-center">
-             {item.reward.imageUrl ? (
-                <img src={item.reward.imageUrl} alt={item.reward.title} className="w-full h-full object-contain filter drop-shadow-2xl" />
-             ) : item.reward.category === 'COSMETIC' ? (
-                <div className="scale-150">
-                  <AvatarWithAura user={{ equippedAura: item.reward.title, avatarColor: '#7c3aed' }} size="md" />
-                </div>
-             ) : (
-                <span className="text-7xl drop-shadow-2xl">{item.reward.emoji}</span>
-             )}
+             
+             <RewardImage 
+               imageUrl={item.reward.imageUrl} 
+               emoji={item.reward.emoji} 
+               title={item.reward.title} 
+               rarity={item.reward.rarity}
+               containerClassName="rounded-3xl h-full w-full"
+             />
+
            </motion.div>
            
            {/* Particles for High Rarities */}
@@ -335,10 +334,14 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
         </div>
 
         {/* Info */}
-        <h3 className="text-[var(--text)] font-['Russo_One'] text-lg mb-1 leading-tight transition-all">
+        <h3 className={`text-[var(--text)] text-lg mb-1 leading-tight transition-all ${
+          item.reward.rarity === 'LEGENDARY' ? 'font-premium-display gold-text text-xl' : "font-['Russo_One']"
+        }`}>
           {item.reward.title}
         </h3>
-        <p className="text-[var(--muted)] text-[10px] uppercase font-bold tracking-widest mb-6 line-clamp-1">
+        <p className={`text-[var(--muted)] text-[10px] uppercase font-bold tracking-widest mb-6 line-clamp-1 ${
+          item.reward.rarity === 'LEGENDARY' ? 'font-premium-body' : ''
+        }`}>
           {item.reward.category}
         </p>
 
@@ -347,7 +350,9 @@ function ItemCard({ item, index, onPurchase, isPurchasing, isOwned }) {
               <span className={`text-xs ${isOwned ? 'text-[var(--muted)] opacity-50' : 'text-[var(--muted)] line-through'}`}>
                 {formatCompact(item.originalPrice)}
               </span>
-              <span className={`text-xl font-['Russo_One'] ${isOwned ? 'text-gray-500' : 'text-yellow-400'}`}>
+              <span className={`text-xl ${isOwned ? 'text-gray-500' : 'text-yellow-400'} ${
+                item.reward.rarity === 'LEGENDARY' ? 'text-2xl drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]' : "font-['Russo_One']"
+              }`}>
                 {formatCompact(item.price)}
               </span>
            </div>
@@ -438,10 +443,10 @@ function OpeningCeremony({ items, revealedItems, onClose, ownedRewardIds }) {
               {/* Front of the card */}
               <div className={`absolute inset-0 bg-black border-4 rounded-2xl flex flex-col items-center justify-center p-4 shadow-2xl overflow-hidden transition-all duration-500 ${isRevealed ? 'opacity-100' : 'opacity-0'}`}
                 style={{ 
-                  borderColor: config.color, 
-                  boxShadow: isRevealed ? `0 0 50px ${config.color}66` : 'none',
-                  backfaceVisibility: 'hidden', 
-                  transform: isRevealed ? 'rotateY(0)' : 'rotateY(-180deg)'
+                   borderColor: config.color, 
+                   boxShadow: isRevealed ? `0 0 50px ${config.color}66` : 'none',
+                   backfaceVisibility: 'hidden', 
+                   transform: isRevealed ? 'rotateY(0)' : 'rotateY(-180deg)'
                 }}>
                 
                 {/* Rarity Flare */}
@@ -456,8 +461,19 @@ function OpeningCeremony({ items, revealedItems, onClose, ownedRewardIds }) {
                   </div>
                 )}
 
-                <span className="text-5xl md:text-7xl mb-4 drop-shadow-2xl">{item.reward.emoji}</span>
-                <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-center text-[var(--text)] opacity-80">
+                <div className="w-full h-3/4 relative mb-2">
+                  <RewardImage 
+                    imageUrl={item.reward.imageUrl} 
+                    emoji={item.reward.emoji} 
+                    title={item.reward.title} 
+                    rarity={item.reward.rarity}
+                    containerClassName="h-full rounded-xl"
+                  />
+                </div>
+
+                <span className={`text-[10px] md:text-xs font-black uppercase tracking-widest text-center text-[var(--text)] opacity-80 ${
+                  item.reward.rarity === 'LEGENDARY' ? 'font-premium-display gold-text' : ''
+                }`}>
                    {item.reward.title}
                 </span>
                 

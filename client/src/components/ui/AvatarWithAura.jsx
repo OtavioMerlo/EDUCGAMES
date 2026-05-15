@@ -116,16 +116,23 @@ export const ACCESSORIES = {
   'Coroa Lendária': { type: 'crown', color: '#fbbf24', rarity: 'LEGENDARY' },
   'Óculos Estilosos': { type: 'glasses', rarity: 'RARE' },
   'Chapéu do Hokage': { type: 'image', src: '/acessorios/chapeu do hokage.png', pos: { top: '-35%', height: '50%', width: '110%', left: '-5%' }, rarity: 'EPIC' },
+  'Hokage Hat': { type: 'image', src: '/acessorios/chapeu do hokage.png', pos: { top: '-35%', height: '50%', width: '110%', left: '-5%' }, rarity: 'EPIC' },
   // Legendary Anime Items
   'Cabelo Super Saiyajin': { type: 'image', src: '/acessorios/saiajin.png', pos: { top: '-60%', height: '120%', width: '160%', left: '-30%' }, rarity: 'LEGENDARY' },
   'Cabelo Deus Sayajin': { type: 'image', src: '/acessorios/deus super sayajin.png', pos: { top: '-55%', height: '115%', width: '155%', left: '-27.5%' }, rarity: 'LEGENDARY' },
   'Cabelo Sayajin Clássico': { type: 'image', src: '/acessorios/cabelo goku.png', pos: { top: '-55%', height: '110%', width: '150%', left: '-25%' }, rarity: 'LEGENDARY' },
+  'Goku Hair': { type: 'image', src: '/acessorios/cabelo goku.png', pos: { top: '-55%', height: '110%', width: '150%', left: '-25%' }, rarity: 'LEGENDARY' },
   'Marca do Caçador — Tanjiro': { type: 'image', src: '/acessorios/marca do caçador.png', pos: { top: '5%', right: '0%', height: '40%', width: '40%' }, rarity: 'LEGENDARY' },
   'Sharingan do Uchiha': { type: 'image', src: '/acessorios/sharingan.png', pos: { bottom: '-5%', right: '-15%', height: '50%', width: '60%' }, rarity: 'LEGENDARY' },
+  'Sharingan Eyes': { type: 'image', src: '/acessorios/sharingan.png', pos: { bottom: '-5%', right: '-15%', height: '50%', width: '60%' }, rarity: 'LEGENDARY' },
   'Rinnegan Puro': { type: 'image', src: '/acessorios/rinengan.png', pos: { bottom: '-5%', right: '-15%', height: '50%', width: '60%' }, rarity: 'LEGENDARY' },
+  'Rinengan Eyes': { type: 'image', src: '/acessorios/rinengan.png', pos: { bottom: '-5%', right: '-15%', height: '50%', width: '60%' }, rarity: 'LEGENDARY' },
   'Rinnegan-Sharingan Eterno': { type: 'image', src: '/acessorios/rinesharingan.png', pos: { bottom: '-5%', right: '-15%', height: '50%', width: '60%' }, rarity: 'LEGENDARY' },
+  'Rine Sharingan': { type: 'image', src: '/acessorios/card_rinesharingan.png', pos: { bottom: '-5%', right: '-15%', height: '50%', width: '60%' }, rarity: 'LEGENDARY' },
   'Nuvem da Akatsuki': { type: 'image', src: '/acessorios/akttsuki.png', pos: { bottom: '-10%', right: '-20%', height: '55%', width: '65%' }, rarity: 'LEGENDARY' },
+  'Akatsuki Robe': { type: 'image', src: '/acessorios/akttsuki.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Brincos Potara': { type: 'image', src: '/acessorios/brincos do dragao ball.png', pos: { bottom: '-15%', right: '-25%', height: '70%', width: '80%' }, rarity: 'LEGENDARY' },
+  'Potara Earrings': { type: 'image', src: '/acessorios/brincos do dragao ball.png', pos: { bottom: '-15%', right: '-25%', height: '70%', width: '80%' }, rarity: 'LEGENDARY' },
   'Manto Kurama Completo': { type: 'image', src: '/acessorios/naruto chakara.png', pos: { inset: '-35%', opacity: 0.8 }, rarity: 'LEGENDARY' },
   // Dragon Ball Transformations (Full Overlay)
   'Goku Ultra Instinto': { type: 'image', src: '/acessorios/goku extinto superior completo.png', pos: { inset: '-40%' }, rarity: 'LEGENDARY' },
@@ -137,6 +144,7 @@ export const ACCESSORIES = {
   'Goku SSJ3': { type: 'image', src: '/acessorios/gokussj3.png', pos: { inset: '-45%' }, rarity: 'LEGENDARY' },
   'Goku SSJ4': { type: 'image', src: '/acessorios/gokussj4.png', pos: { inset: '-40%' }, rarity: 'LEGENDARY' },
   'Gohan Beast': { type: 'image', src: '/acessorios/gohanbeast.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
+  'Gohan Beast Skin': { type: 'image', src: '/acessorios/gohanbeast.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Gohan SSJ1': { type: 'image', src: '/acessorios/gonhassj1.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Goku Base': { type: 'image', src: '/acessorios/goku.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Goku God Full': { type: 'image', src: '/acessorios/gokugod.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
@@ -146,7 +154,15 @@ export const ACCESSORIES = {
   'Vegeta Blue': { type: 'image', src: '/acessorios/vegetassj-blue.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Vegeta God': { type: 'image', src: '/acessorios/ssj-god.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Majin Vegeta': { type: 'image', src: '/acessorios/majin-vegeta.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
+  'Majin Mark': { type: 'image', src: '/acessorios/majin-vegeta.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
   'Vegeta Ultra Ego': { type: 'image', src: '/acessorios/ultra-egoo.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
+  'Ultra Ego': { type: 'image', src: '/acessorios/ultra-egoo.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
+  'Tanjiro Haori': { type: 'image', src: '/acessorios/card_tanjiro.png', pos: { inset: '-35%' }, rarity: 'EPIC' },
+  'Ninja Bandana': { type: 'image', src: '/acessorios/bandana.png', pos: { top: '15%', height: '15%', width: '110%', left: '-5%' }, rarity: 'RARE' },
+  // Superman Collection
+  'Superman Smallville v2': { type: 'image', src: '/acessorios/supermansmallville2.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
+  'Superman Smallville v1': { type: 'image', src: '/acessorios/supermansmallvile.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
+  'Superman Classic': { type: 'image', src: '/acessorios/superman1.png', pos: { inset: '-35%' }, rarity: 'LEGENDARY' },
 }
 
 // ── CANVAS PARTICLE SYSTEM ──────────────────────────────────────────────────────
@@ -267,7 +283,8 @@ function FloatingOrbs() {
 
 // ── ACCESSORY OVERLAY ─────────────────────────────────────────────────────────
 function AccessoryOverlay({ accessoryKey }) {
-  const acc = accessoryKey ? ACCESSORIES[accessoryKey] : null
+  const key = accessoryKey?.trim()
+  const acc = key ? ACCESSORIES[key] : null
   if (!acc) return null
 
   if (acc.type === 'headband') {
@@ -467,8 +484,8 @@ export default function AvatarWithAura({ user, size = 'md', className = '', show
       {/* Aura name tag (xl only) */}
       {size === 'xl' && aura && (
         <motion.div
-          className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
-          style={{ background: `${glowColor}25`, color: glowColor, border: `1px solid ${glowColor}50`, zIndex: 20 }}
+          className="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
+          style={{ background: `${glowColor}25`, color: glowColor, border: `1px solid ${glowColor}50`, zIndex: 40 }}
           animate={{ opacity: [0.7, 1, 0.7] }}
           transition={{ duration: 2, repeat: Infinity }}
         >

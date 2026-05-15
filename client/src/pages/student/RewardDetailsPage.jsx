@@ -5,6 +5,7 @@ import { ChevronLeft, ShoppingBag, CheckCircle2, ShieldCheck, Zap, Info } from '
 import api from '../../services/api'
 import useAuthStore from '../../store/useAuthStore'
 import AvatarWithAura from '../../components/ui/AvatarWithAura'
+import RewardImage from '../../components/ui/RewardImage'
 import toast from 'react-hot-toast'
 
 const RARITY = {
@@ -54,28 +55,42 @@ export default function RewardDetailsPage() {
   const canBuy = !isOwned && (currentUser?.coins || 0) >= reward.price && (reward.stock === -1 || reward.stock > 0)
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto pb-20">
       <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-[var(--muted)] hover:text-white mb-6 transition-colors">
         <ChevronLeft size={20} /> Voltar para a Loja
       </button>
 
       <div className="grid lg:grid-cols-[1fr_350px] gap-8">
         <div className="flex flex-col gap-6">
-          {/* Card de Visualização */}
-          <div className="relative rounded-3xl overflow-hidden glass border border-white/10 aspect-video lg:aspect-auto lg:h-[400px] flex items-center justify-center">
-            <div className="absolute inset-0 opacity-30" style={{ background: reward.bgGradient }} />
+          {/* Card de Visualização Profissional */}
+          <div className={`relative rounded-3xl overflow-hidden flex items-center justify-center ${
+            reward.category === 'SUBSCRIPTION'
+              ? 'premium-service-card border-none shadow-2xl'
+              : reward.rarity === 'LEGENDARY' 
+                ? 'legendary-card border-none shadow-2xl' 
+                : 'glass border border-white/10 shadow-xl'
+          } aspect-video lg:h-[450px]`}>
+            {reward.rarity === 'LEGENDARY' && <div className="legendary-glow" />}
+            {reward.category === 'SUBSCRIPTION' && <div className="service-glow" />}
             
-            {reward.category === 'COSMETIC' ? (
-              <div className="relative z-10 flex flex-col items-center gap-6">
+            <div className="absolute inset-0 opacity-40" style={{ background: reward.bgGradient }} />
+            
+            <RewardImage 
+              imageUrl={reward.imageUrl} 
+              emoji={reward.emoji} 
+              title={reward.title} 
+              rarity={reward.rarity}
+              containerClassName="h-full w-full"
+              className="scale-110" // Zoom leve para detalhes
+            />
+
+            {reward.category === 'COSMETIC' && (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px]">
                 <AvatarWithAura user={{ ...currentUser, equippedAura: reward.title }} size="xl" />
-                <div className="text-center">
+                <div className="text-center mt-6">
                   <div className="text-xs font-black uppercase tracking-[0.2em] text-white/50 mb-1">Pré-visualização</div>
                   <div className="text-sm font-bold text-white/80">Como ficará no seu perfil</div>
                 </div>
-              </div>
-            ) : (
-              <div className="relative z-10 flex flex-col items-center gap-4">
-                <span className="text-9xl drop-shadow-2xl animate-bounce-slow">{reward.emoji}</span>
               </div>
             )}
           </div>
@@ -90,8 +105,12 @@ export default function RewardDetailsPage() {
               <div className="text-[var(--muted)] text-xs font-bold uppercase tracking-widest">{reward.category}</div>
             </div>
             
-            <h1 className="font-display text-4xl font-bold mb-4">{reward.title}</h1>
-            <p className="text-[var(--muted)] text-lg leading-relaxed mb-8">{reward.description}</p>
+            <h1 className={`font-display text-4xl font-bold mb-4 ${reward.rarity === 'LEGENDARY' ? 'font-premium-display gold-text !text-5xl tracking-tight' : ''}`}>
+              {reward.title}
+            </h1>
+            <p className={`text-[var(--muted)] text-lg leading-relaxed mb-8 ${reward.rarity === 'LEGENDARY' ? 'font-premium-body text-white/80' : ''}`}>
+              {reward.description}
+            </p>
 
             <div className="space-y-6">
               <h3 className="font-display text-xl font-bold flex items-center gap-2">
@@ -154,7 +173,9 @@ export default function RewardDetailsPage() {
                 isOwned 
                 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-default'
                 : canBuy 
-                  ? 'bg-white text-black hover:bg-[var(--cyan)] hover:scale-[1.02]' 
+                  ? reward.rarity === 'LEGENDARY'
+                    ? 'bg-gradient-to-r from-[#CA8A04] to-[#fde68a] text-black hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(202,138,4,0.6)]'
+                    : 'bg-white text-black hover:bg-[var(--cyan)] hover:scale-[1.02]' 
                   : 'bg-white/5 text-[var(--muted)] cursor-not-allowed'
               }`}>
               {isOwned ? (

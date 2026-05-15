@@ -11,6 +11,7 @@ import GameOverlay from './components/game/GameOverlay'
 const LandingPage   = lazy(() => import('./pages/public/LandingPage'))
 const LoginPage     = lazy(() => import('./pages/auth/LoginPage'))
 const RegisterPage  = lazy(() => import('./pages/auth/RegisterPage'))
+const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'))
 
 // Student
 const DashboardPage      = lazy(() => import('./pages/student/DashboardPage'))
@@ -24,6 +25,8 @@ const ProfilePage        = lazy(() => import('./pages/student/ProfilePage'))
 const HistoryPage        = lazy(() => import('./pages/student/HistoryPage'))
 const Loja24Page         = lazy(() => import('./pages/student/Loja24Page'))
 const InventoryPage      = lazy(() => import('./pages/student/InventoryPage'))
+const PublicProfilePage  = lazy(() => import('./pages/student/PublicProfilePage'))
+const PlayersPage        = lazy(() => import('./pages/student/PlayersPage'))
 
 // Teacher
 const TeacherDashboard   = lazy(() => import('./pages/teacher/TeacherDashboard'))
@@ -49,8 +52,9 @@ export default function App() {
 
           {/* Auth (only when NOT logged in) */}
           <Route element={<PublicOnlyRoute />}>
-            <Route path="/login"    element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login"           element={<LoginPage />} />
+            <Route path="/register"        element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           </Route>
 
           {/* Student Routes */}
@@ -67,6 +71,8 @@ export default function App() {
               <Route path="/history"            element={<HistoryPage />} />
               <Route path="/loja24"             element={<Loja24Page />} />
               <Route path="/inventory"          element={<InventoryPage />} />
+              <Route path="/profile/:id"        element={<PublicProfilePage />} />
+              <Route path="/players"            element={<PlayersPage />} />
             </Route>
           </Route>
 

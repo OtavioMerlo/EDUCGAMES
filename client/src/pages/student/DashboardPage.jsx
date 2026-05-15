@@ -137,7 +137,7 @@ export default function DashboardPage() {
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-0.5">
               Olá, <span className="grad-text">{currentUser?.name?.split(' ')[0]}</span>! 👋
             </h1>
-            <p className="text-[var(--muted)] text-sm">Seu progresso é salvo automaticamente no banco de dados.</p>
+            <p className="text-[var(--muted)] text-sm">Seu progresso é salvo automaticamente no Servidor.</p>
           </div>
         </div>
       </div>

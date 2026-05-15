@@ -141,7 +141,7 @@ export default function LoginPage() {
 
               {/* Password */}
               <div>
-                <Link to="#" className="block text-right text-xs text-[var(--purple-l)] hover:text-[var(--pink)] mb-1.5 font-semibold transition-colors">
+                <Link to="/forgot-password" title="Funcionalidade em desenvolvimento" className="block text-right text-xs text-[var(--purple-l)] hover:text-[var(--pink)] mb-1.5 font-semibold transition-colors">
                   Esqueceu sua senha?
                 </Link>
                 <div className="relative">

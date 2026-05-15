@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Gamepad2, Gift, Music, Search, Check, ExternalLink, LayoutGrid, Shirt, ShieldCheck, X } from 'lucide-react'
@@ -6,6 +7,7 @@ import api from '../../services/api'
 import useAuthStore from '../../store/useAuthStore'
 import toast from 'react-hot-toast'
 import AvatarWithAura, { AURAS } from '../../components/ui/AvatarWithAura'
+import RewardImage from '../../components/ui/RewardImage'
 
 const RARITY = {
   COMMON:    { label: 'Comum',    color: '#9ca3af', bg: 'rgba(156,163,175,0.12)', border: '#9ca3af44' },
@@ -189,8 +191,7 @@ export default function InventoryPage() {
 
 function ItemCard({ reward: r, isEquipped, canEquip, isAura, isBusy, onEquip }) {
   const rar = RARITY[r.rarity] || RARITY.COMMON
-  const auraData = isAura ? AURAS[r.title] : null
-  const isAcc = r.category === 'ACCESSORY'
+  const isLegendary = r.rarity === 'LEGENDARY'
 
   return (
     <motion.div
@@ -198,71 +199,73 @@ function ItemCard({ reward: r, isEquipped, canEquip, isAura, isBusy, onEquip }) 
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      whileHover={{ y: -4 }}
-      className="relative rounded-3xl overflow-hidden cursor-pointer group"
-      style={{
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+      className={`relative rounded-3xl overflow-hidden cursor-pointer group transition-all ${
+        isLegendary ? 'legendary-card border-none shadow-xl' : ''
+      }`}
+      style={!isLegendary ? {
         background: isEquipped
           ? `linear-gradient(135deg, ${rar.color}18, ${rar.color}08)`
           : 'var(--bg2)',
         border: `1px solid ${isEquipped ? rar.color + '55' : 'var(--border)'}`,
         boxShadow: isEquipped ? `0 0 24px ${rar.color}25, 0 0 60px ${rar.color}10` : 'none',
-      }}
+      } : {}}
+      onClick={canEquip && !isBusy ? onEquip : undefined}
     >
+      {isLegendary && <div className="legendary-glow" />}
+
       {/* Visual header */}
-      <div className="h-32 flex items-center justify-center relative overflow-hidden"
+      <div className={`h-40 relative overflow-hidden ${isLegendary ? 'h-44' : ''}`}
         style={{ background: r.bgGradient || 'linear-gradient(135deg,#1a0a3d,#2d0a4e)' }}>
 
         {/* Rarity badge */}
-        <div className="absolute top-2 left-2 text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
-          style={{ background: rar.bg, color: rar.color, border: `1px solid ${rar.border}` }}>
+        <div className="absolute top-3 left-3 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg z-20"
+          style={{ background: 'rgba(0,0,0,0.6)', color: rar.color, border: `1px solid ${rar.color}44`, backdropFilter: 'blur(4px)' }}>
           {rar.label}
         </div>
 
         {/* Equipped badge */}
         {isEquipped && (
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
-            className="absolute top-2 right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg">
-            <Check size={12} className="text-purple-600" strokeWidth={3} />
+            className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-2xl z-30 border-2 border-emerald-500">
+            <Check size={16} className="text-emerald-600" strokeWidth={4} />
           </motion.div>
         )}
 
         {/* Item visual */}
-        {r.imageUrl ? (
-          <div className="w-full h-full p-2">
-            <img src={r.imageUrl} alt={r.title} className="w-full h-full object-contain filter drop-shadow-2xl" />
-          </div>
-        ) : isAura ? (
-          <div className="scale-110">
-            <AvatarWithAura user={{ equippedAura: r.title, avatarColor: '#7c3aed', name: 'A' }} size="md" showAccessory={false} />
-          </div>
-        ) : isAcc ? (
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-4xl filter drop-shadow-xl">{r.emoji}</span>
-          </div>
-        ) : (
-          <span className="text-5xl filter drop-shadow-2xl">{r.emoji}</span>
-        )}
+        <RewardImage 
+          imageUrl={r.imageUrl} 
+          emoji={r.emoji} 
+          title={r.title} 
+          rarity={r.rarity}
+          containerClassName="h-full"
+        />
       </div>
 
       {/* Body */}
-      <div className="p-3">
-        <h4 className="font-bold text-xs text-[var(--text)] leading-tight line-clamp-2 mb-1">{r.title}</h4>
-        {auraData && <p className="text-[10px] text-[var(--muted)] mb-2">{auraData.icon} {auraData.label} · {rar.label}</p>}
-        {!auraData && <p className="text-[10px] text-[var(--muted)] mb-2">{rar.label}</p>}
+      <div className="p-4 relative z-10">
+        <h4 className={`font-bold text-sm mb-1 leading-tight line-clamp-1 transition-colors ${
+          isLegendary ? 'font-premium-display gold-text text-base' : 'group-hover:text-[var(--purple-l)]'
+        }`}>{r.title}</h4>
+        <p className={`text-[10px] text-[var(--muted)] mb-3 uppercase font-black tracking-widest ${
+          isLegendary ? 'font-premium-body text-white/60' : ''
+        }`}>{r.category} · {rar.label}</p>
 
         {canEquip ? (
-          <button onClick={onEquip} disabled={isBusy}
-            className="w-full py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer"
-            style={isEquipped
-              ? { background: rar.bg, color: rar.color, border: `1px solid ${rar.border}` }
-              : { background: 'var(--inp)', color: 'var(--muted)', border: '1px solid var(--border)' }
-            }>
+          <button onClick={(e) => { e.stopPropagation(); onEquip(); }} disabled={isBusy}
+            className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer ${
+              isEquipped 
+                ? isLegendary 
+                  ? 'bg-gradient-to-r from-[#CA8A04] to-[#fde68a] text-black shadow-lg' 
+                  : 'bg-white text-black'
+                : 'bg-white/5 text-[var(--muted)] border border-white/10 hover:bg-white/10 hover:text-white'
+            }`}>
             {isEquipped ? '✓ Equipado' : 'Equipar'}
           </button>
         ) : (
-          <button className="w-full py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-blue-500/10 text-blue-400 border border-blue-500/20 transition-all flex items-center justify-center gap-1 cursor-pointer">
-            <ExternalLink size={10} /> Detalhes
-          </button>
+          <Link to={`/store/${r.id}`} className="w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest bg-blue-500/10 text-blue-400 border border-blue-500/20 transition-all flex items-center justify-center gap-1 hover:bg-blue-500/20">
+            <ExternalLink size={12} /> Ver na Loja
+          </Link>
         )}
       </div>
     </motion.div>

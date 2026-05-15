@@ -16,6 +16,8 @@ const notificationRoutes = require('./routes/notification.routes');
 const missionRoutes = require('./routes/mission.routes');
 const achievementRoutes = require('./routes/achievement.routes');
 const loja24Routes = require('./routes/loja24.routes');
+const friendshipRoutes = require('./routes/friendship.routes');
+const searchRoutes = require('./routes/search.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -66,6 +68,8 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/missions', missionRoutes);
 app.use('/api/achievements', achievementRoutes);
 app.use('/api/loja24', loja24Routes);
+app.use('/api/friendships', friendshipRoutes);
+app.use('/api/search', searchRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

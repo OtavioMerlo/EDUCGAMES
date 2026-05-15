@@ -1,65 +1,132 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { LayoutDashboard, Users, ShoppingBag, FileText, LogOut, Shield } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom'
+import { 
+  LayoutDashboard, Users, ShoppingBag, ScrollText, ShieldAlert, 
+  ArrowLeft, LogOut, ChevronRight, Settings, Activity, Globe
+} from 'lucide-react'
 import useAuthStore from '../store/useAuthStore'
-import toast from 'react-hot-toast'
 
-const navItems = [
-  { to: '/admin',       icon: LayoutDashboard, label: 'Dashboard',  end: true },
-  { to: '/admin/users', icon: Users,           label: 'Usuários' },
-  { to: '/admin/store', icon: ShoppingBag,     label: 'Marketplace' },
-  { to: '/admin/logs',  icon: FileText,        label: 'Logs' },
+const adminNav = [
+  { to: '/admin',        icon: LayoutDashboard, label: 'Geral',      desc: 'Analytics e visão geral' },
+  { to: '/admin/users',  icon: Users,           label: 'Usuários',   desc: 'Moderação e economia' },
+  { to: '/admin/store',  icon: ShoppingBag,     label: 'Loja',       desc: 'Itens e recompensas' },
+  { to: '/admin/logs',   icon: ScrollText,      label: 'Logs',       desc: 'Auditoria do sistema' },
 ]
 
 export default function AdminLayout() {
+  const { pathname } = useLocation()
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
 
+  if (user?.role !== 'ADMIN') {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
+        <ShieldAlert size={64} className="text-red-500 mb-4" />
+        <h1 className="text-2xl font-black mb-2">Acesso Negado</h1>
+        <p className="text-[var(--muted)] mb-6">Você não tem permissão para acessar esta área.</p>
+        <button onClick={() => navigate('/')} className="btn-primary px-8">Voltar para Início</button>
+      </div>
+    )
+  }
+
   const handleLogout = async () => {
     await logout()
-    toast.success('Até logo! 👋')
     navigate('/login')
   }
 
   return (
-    <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
-      <div className="blobs"><div className="blob b1"/><div className="blob b2"/><div className="blob b3"/></div>
-      <div className="bg-grid"/>
+    <div className="min-h-screen bg-[#07071a] text-[var(--text)] flex">
+      {/* ── Sidebar ── */}
+      <aside className="w-80 border-r border-white/5 bg-[#0a0a25]/50 backdrop-blur-xl hidden lg:flex flex-col sticky top-0 h-screen overflow-hidden">
+        {/* Header */}
+        <div className="p-8 border-b border-white/5">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-purple-500 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+              <Settings className="text-white" size={24} />
+            </div>
+            <div>
+              <div className="font-black text-xl tracking-tighter uppercase">ADMIN<span className="text-purple-500">PRO</span></div>
+              <div className="text-[10px] font-bold text-purple-400 uppercase tracking-widest">Painel de Controle</div>
+            </div>
+          </div>
 
-      <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 z-50 w-60 flex-col glass"
-        style={{ borderRight: '1px solid var(--border)', padding: '24px 12px' }}>
-        <div className="flex items-center gap-3 px-2 pb-5 mb-5 border-b border-[var(--border)]">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(124,58,237,.25)', border: '1px solid rgba(168,85,247,.4)' }}>
-            <Shield size={18} className="text-[var(--purple-l)]" />
-          </div>
-          <div>
-            <div className="font-display text-base font-bold tracking-wide grad-text">Admin</div>
-            <div className="text-[11px] text-[var(--muted)]">{user?.name}</div>
-          </div>
+          <Link to="/" className="flex items-center gap-2 text-[var(--muted)] hover:text-white transition-colors text-sm font-bold">
+            <ArrowLeft size={16} />
+            Voltar para a Plataforma
+          </Link>
         </div>
 
-        <div className="flex-1 flex flex-col gap-0.5">
-          {navItems.map(({ to, icon: Icon, label, end }) => (
-            <NavLink key={to} to={to} end={end} className={({ isActive }) =>
-              `nav-link ${isActive ? 'active' : ''}`}>
-              <Icon size={18} strokeWidth={1.8} />{label}
-            </NavLink>
-          ))}
-        </div>
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto p-6 space-y-2">
+          {adminNav.map(item => {
+            const active = pathname === item.to || (item.to !== '/admin' && pathname.startsWith(item.to))
+            const Icon = item.icon
+            return (
+              <Link key={item.to} to={item.to} className="block group">
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  className={`flex items-center gap-4 p-4 rounded-2xl transition-all border ${
+                    active 
+                      ? 'bg-purple-500/10 border-purple-500/20 text-white shadow-[0_0_30px_rgba(168,85,247,0.1)]' 
+                      : 'border-transparent text-[var(--muted)] hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <div className={`p-2.5 rounded-xl transition-colors ${active ? 'bg-purple-500 text-white' : 'bg-white/5 text-[var(--muted)] group-hover:text-white'}`}>
+                    <Icon size={20} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-black text-sm uppercase tracking-tight">{item.label}</div>
+                    <div className="text-[10px] font-medium opacity-60 leading-tight">{item.desc}</div>
+                  </div>
+                  <ChevronRight size={16} className={`transition-all ${active ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`} />
+                </motion.div>
+              </Link>
+            )
+          })}
+        </nav>
 
-        <div className="pt-4 border-t border-[var(--border)]">
-          <button onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-white/5 transition-all text-sm">
-            <LogOut size={16} /> Sair da conta
+        {/* User Info Footer */}
+        <div className="p-6 border-t border-white/5 bg-black/20">
+          <div className="flex items-center gap-3 mb-4">
+             <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center font-black">{user.name?.charAt(0)}</div>
+             <div className="flex-1 min-w-0">
+               <div className="text-sm font-black truncate">{user.name}</div>
+               <div className="text-[10px] text-purple-400 font-bold uppercase">Administrador Master</div>
+             </div>
+             <button onClick={handleLogout} className="p-2 rounded-lg hover:bg-red-500/10 text-[var(--muted)] hover:text-red-400 transition-colors">
+               <LogOut size={18} />
+             </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* ── Main Content ── */}
+      <main className="flex-1 min-h-screen flex flex-col relative overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-purple-500/10 blur-[120px] rounded-full -mr-96 -mt-96 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 blur-[100px] rounded-full -ml-48 -mb-48 pointer-events-none" />
+
+        {/* Mobile Header */}
+        <header className="lg:hidden p-4 border-b border-white/5 bg-[#0a0a25]/80 backdrop-blur-md sticky top-0 z-50 flex items-center justify-between">
+          <div className="font-black text-xl tracking-tighter uppercase">ADMIN<span className="text-purple-500">PRO</span></div>
+          <button onClick={handleLogout} className="p-2 rounded-lg bg-white/5 text-[var(--muted)]">
+            <LogOut size={18} />
           </button>
-        </div>
-      </nav>
+        </header>
 
-      <main className="lg:ml-60 min-h-screen">
-        <div className="relative z-10 p-4 lg:p-8">
-          <motion.div key={location.pathname} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-            <Outlet />
-          </motion.div>
+        {/* Content Wrapper */}
+        <div className="flex-1 p-6 lg:p-12 relative z-10 max-w-7xl mx-auto w-full">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </div>
       </main>
     </div>

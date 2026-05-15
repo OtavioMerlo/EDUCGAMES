@@ -3,14 +3,16 @@ import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   Home, BookOpen, Trophy, ShoppingBag, Star, User, History,
-  LogOut, Bell, Coins, Flame, Zap, LayoutGrid, Sun, Moon
+  LogOut, Bell, Coins, Flame, Zap, LayoutGrid, Sun, Moon, Users
 } from 'lucide-react'
+
 import useAuthStore from '../store/useAuthStore'
 import { useQuery } from '@tanstack/react-query'
 import api from '../services/api'
 import toast from 'react-hot-toast'
 import AvatarWithAura from '../components/ui/AvatarWithAura'
 import { formatCompact } from '../utils/format'
+import CommandPalette from '../components/ui/CommandPalette'
 
 const navItems = [
   { to: '/dashboard',    icon: Home,        label: 'Início' },
@@ -20,6 +22,7 @@ const navItems = [
   { to: '/store',        icon: ShoppingBag, label: 'Loja' },
   { to: '/inventory',    icon: LayoutGrid,  label: 'Inventário' },
   { to: '/achievements', icon: Star,        label: 'Conquistas' },
+  { to: '/players',      icon: Users,       label: 'Jogadores' },
   { to: '/profile',      icon: User,        label: 'Perfil' },
   { to: '/history',      icon: History,     label: 'Histórico' },
 ]
@@ -105,23 +108,28 @@ export default function AppLayout() {
       <nav className="hidden lg:flex fixed top-0 left-0 bottom-0 z-50 w-60 flex-col glass"
         style={{ borderRight: '1px solid var(--border)', padding: '24px 12px' }}>
 
-        {/* Logo + Theme Toggle */}
-        <div className="flex items-center justify-between px-2 pb-5 mb-4 border-b border-[var(--border)]">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 p-1.5 flex items-center justify-center">
+        {/* Logo Section */}
+        <div className="px-2 pb-6 mb-2">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 p-2 flex items-center justify-center shadow-lg">
                <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-               <h1 className="font-display font-black text-xl tracking-tighter leading-none text-[var(--text)]">
+               <h1 className="font-display font-black text-2xl tracking-tighter leading-none text-[var(--text)]">
                  Educa<span className="text-[var(--purple-l)]">Games</span>
                </h1>
-               <div className="text-[9px] uppercase font-black tracking-widest text-[var(--muted)]">TCC Edition</div>
+               <div className="text-[10px] uppercase font-black tracking-widest text-[var(--muted)] opacity-80">TCC Edition</div>
             </div>
           </div>
           
-          <button onClick={toggleTheme} className="p-2 rounded-xl bg-white/5 border border-white/10 text-[var(--muted)] hover:text-[var(--text)] transition-all">
-            {isLight ? <Moon size={18} /> : <Sun size={18} />}
-          </button>
+          <div className="flex items-center gap-1.5">
+            <div className="flex-1 min-w-0">
+              <CommandPalette />
+            </div>
+            <button onClick={toggleTheme} className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-[var(--muted)] hover:text-[var(--text)] hover:bg-white/10 transition-all shadow-sm flex-shrink-0">
+              {isLight ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
+          </div>
         </div>
 
         {/* XP Bar */}
@@ -177,9 +185,12 @@ export default function AppLayout() {
             <span className="text-[var(--text)]">EDUCA</span>
             <span className="grad-text">GAMES</span>
           </span>
-          <button onClick={toggleTheme} className="p-2 rounded-lg bg-white/5 border border-white/10 text-[var(--muted)]">
-            {isLight ? <Moon size={16} /> : <Sun size={16} />}
-          </button>
+          <div className="flex items-center gap-2">
+            <CommandPalette />
+            <button onClick={toggleTheme} className="p-2 rounded-lg bg-white/5 border border-white/10 text-[var(--muted)]">
+              {isLight ? <Moon size={16} /> : <Sun size={16} />}
+            </button>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-bold"

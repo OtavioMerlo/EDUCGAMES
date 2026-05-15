@@ -37,6 +37,8 @@ model User {
   refreshTokens     RefreshToken[]
   userAchievements  UserAchievement[]
   userMissions      UserMission[]
+  sentFriendships     Friendship[]       @relation("FriendshipSender")
+  receivedFriendships Friendship[]       @relation("FriendshipReceiver")
 }
 
 model Activity {
@@ -198,6 +200,19 @@ model RefreshToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model Friendship {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  status     String   @default("PENDING") // PENDING | ACCEPTED | REJECTED | BLOCKED
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  sender     User     @relation("FriendshipSender", fields: [senderId], references: [id])
+  receiver   User     @relation("FriendshipReceiver", fields: [receiverId], references: [id])
+
+  @@unique([senderId, receiverId])
 }
 
 model AuditLog {

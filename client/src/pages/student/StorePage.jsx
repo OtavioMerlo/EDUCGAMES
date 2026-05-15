@@ -7,6 +7,7 @@ import api from '../../services/api'
 import useAuthStore from '../../store/useAuthStore'
 import toast from 'react-hot-toast'
 import { formatCompact } from '../../utils/format'
+import RewardImage from '../../components/ui/RewardImage'
 
 const RARITY = {
   COMMON: { label: 'Comum', color: '#9ca3af', glow: 'rgba(156,163,175,.2)' },
@@ -144,20 +145,45 @@ export default function StorePage() {
             return (
               <motion.div key={reward.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.03 }}
-                className={`relative flex flex-col rounded-3xl overflow-hidden glass border border-white/10 group ${isOwned ? 'opacity-80' : ''} hover:border-[var(--purple-l)]/40 transition-all`}>
+                className={`relative flex flex-col rounded-3xl overflow-hidden group transition-all ${
+                  reward.category === 'SUBSCRIPTION'
+                    ? 'premium-service-card border-none shadow-2xl'
+                    : reward.rarity === 'LEGENDARY' 
+                      ? 'legendary-card border-none shadow-2xl' 
+                      : `glass border border-white/10 ${isOwned ? 'opacity-80' : ''} hover:border-[var(--purple-l)]/40`
+                }`}>
                 
-                <Link to={`/store/${reward.id}`} className="block">
+                {reward.rarity === 'LEGENDARY' && <div className="legendary-glow" />}
+                {reward.category === 'SUBSCRIPTION' && <div className="service-glow" />}
+
+                <Link to={`/store/${reward.id}`} className="block relative z-10">
                   {/* Header do Item */}
-                  <div className="h-32 flex items-center justify-center relative overflow-hidden" 
+                  <div className={`h-48 relative overflow-hidden ${reward.rarity === 'LEGENDARY' ? 'h-56' : ''}`} 
                     style={{ background: reward.bgGradient }}>
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
-                    <span className="text-6xl relative z-10 drop-shadow-lg group-hover:scale-110 transition-transform duration-500">{reward.emoji}</span>
-                    <div className="absolute top-2 right-2 px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-tighter"
-                      style={{ background: 'rgba(0,0,0,0.5)', color: r.color, border: `1px solid ${r.color}44` }}>
+                    
+                    <RewardImage 
+                      imageUrl={reward.imageUrl} 
+                      emoji={reward.emoji} 
+                      title={reward.title} 
+                      rarity={reward.rarity}
+                      containerClassName="h-full"
+                    />
+
+                    <div className="absolute top-3 right-3 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-tighter z-20"
+                      style={{ background: 'rgba(0,0,0,0.7)', color: r.color, border: `1px solid ${r.color}66`, backdropFilter: 'blur(4px)' }}>
                       {r.label}
                     </div>
+
+                    {reward.rarity === 'LEGENDARY' && (
+                      <div className="absolute top-3 left-3 z-20">
+                        <div className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-[#CA8A04] text-black text-[9px] font-black uppercase tracking-widest shadow-lg animate-pulse">
+                          <Star size={10} fill="currentColor" /> Premium
+                        </div>
+                      </div>
+                    )}
+
                     {isOwned && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] z-20">
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] z-30">
                         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-black text-[10px] font-black uppercase tracking-widest shadow-xl">
                           <CheckCircle2 size={12} /> Adquirido
                         </div>
@@ -167,17 +193,27 @@ export default function StorePage() {
                 </Link>
 
                 {/* Info */}
-                <div className="p-4 flex-1 flex flex-col">
+                <div className="p-4 flex-1 flex flex-col relative z-10">
                   <Link to={`/store/${reward.id}`}>
-                    <h3 className="font-bold text-sm mb-1 truncate group-hover:text-[var(--purple-l)] transition-colors">{reward.title}</h3>
+                    <h3 className={`font-bold text-sm mb-1 truncate transition-colors ${
+                      reward.rarity === 'LEGENDARY' ? 'font-premium-display text-lg gold-text' : 'group-hover:text-[var(--purple-l)]'
+                    }`}>
+                      {reward.title}
+                    </h3>
                   </Link>
-                  <p className="text-[var(--muted)] text-[11px] leading-relaxed mb-4 line-clamp-2 h-8">{reward.description}</p>
+                  <p className={`text-[var(--muted)] text-[11px] leading-relaxed mb-4 line-clamp-2 h-8 ${
+                    reward.rarity === 'LEGENDARY' ? 'font-premium-body text-white/70' : ''
+                  }`}>
+                    {reward.description}
+                  </p>
                   
                   <div className="mt-auto">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-1">
                         <span className="text-sm">🪙</span>
-                        <span className="font-display text-lg font-black text-[#fbbf24]">{formatCompact(reward.price)}</span>
+                        <span className={`font-display text-lg font-black ${reward.rarity === 'LEGENDARY' ? 'text-[#fde68a] text-xl drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]' : 'text-[#fbbf24]'}`}>
+                          {formatCompact(reward.price)}
+                        </span>
                       </div>
                       {reward.stock !== -1 && (
                         <span className="text-[9px] text-[var(--muted)] font-bold uppercase">Estoque: {reward.stock}</span>
@@ -190,7 +226,9 @@ export default function StorePage() {
                         isOwned 
                         ? 'bg-white/10 text-[var(--muted)] cursor-default'
                         : canBuy 
-                          ? 'bg-white text-black hover:bg-[var(--cyan)] hover:shadow-glow' 
+                          ? reward.rarity === 'LEGENDARY'
+                            ? 'bg-gradient-to-r from-[#CA8A04] to-[#fde68a] text-black hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(202,138,4,0.4)]'
+                            : 'bg-white text-black hover:bg-[var(--cyan)] hover:shadow-glow' 
                           : 'bg-white/5 text-[var(--muted)] cursor-not-allowed border border-white/5'
                       }`}>
                       {isOwned ? 'Já Possui' :
@@ -201,7 +239,7 @@ export default function StorePage() {
                   </div>
                 </div>
 
-                {!isOwned && (
+                {!isOwned && reward.rarity !== 'LEGENDARY' && (
                    <div className="absolute inset-0 pointer-events-none group-hover:border-[var(--cyan)]/30 transition-colors border-2 border-transparent rounded-2xl" />
                 )}
               </motion.div>

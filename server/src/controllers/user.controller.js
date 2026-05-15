@@ -195,4 +195,162 @@ const equipAccessory = async (req, res) => {
   }
 };
 
-module.exports = { awardXP, awardCoins, checkAchievements, calculateLevel, getProfile, updateProfile, equipAura, equipAccessory };
+
+const getPublicProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true, name: true, role: true, avatarColor: true,
+        bio: true, xp: true, level: true, streak: true, createdAt: true,
+        equippedAura: true, equippedAccessory: true,
+        userAchievements: {
+          orderBy: { unlockedAt: 'desc' },
+          take: 9,
+          include: {
+            achievement: { select: { id: true, title: true, emoji: true, rarity: true, description: true } }
+          }
+        },
+        purchases: {
+          orderBy: { createdAt: 'desc' },
+          take: 6,
+          include: {
+            reward: { select: { id: true, title: true, imageUrl: true, emoji: true, category: true, rarity: true } }
+          }
+        },
+        _count: {
+          select: { userAchievements: true, purchases: true }
+        }
+      }
+    });
+
+    if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+    // Calcular rank global
+    const allStudents = await prisma.user.findMany({
+      where: { role: 'STUDENT' },
+      orderBy: { xp: 'desc' },
+      select: { id: true }
+    });
+    const rankPosition = allStudents.findIndex(u => u.id === id) + 1;
+
+    // Stats de atividades
+    const activityStats = await prisma.activitySubmission.aggregate({
+      where: { userId: id, status: { in: ['APPROVED', 'GRADED'] } },
+      _count: { id: true },
+      _sum: { xpAwarded: true, coinsAwarded: true }
+    });
+
+    const totalSubmissions = await prisma.activitySubmission.count({ where: { userId: id } });
+    const correctSubmissions = activityStats._count.id;
+    const hitRate = totalSubmissions > 0 ? Math.round((correctSubmissions / totalSubmissions) * 100) : 0;
+
+    const { currentLevelXp, nextLevelXp } = calculateLevel(user.xp);
+
+    res.json({
+      ...user,
+      rankPosition,
+      levelInfo: { level: user.level, currentLevelXp, nextLevelXp },
+      activityStats: {
+        total: totalSubmissions,
+        correct: correctSubmissions,
+        hitRate,
+        xpEarned: activityStats._sum.xpAwarded || 0,
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao buscar perfil público.' });
+  }
+};
+
+const getMyFullProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true, name: true, email: true, role: true, avatarColor: true, bio: true,
+        xp: true, coins: true, level: true, streak: true, streakProtections: true,
+        xpBoostActive: true, xpBoostExpiresAt: true,
+        equippedAura: true, equippedAccessory: true, createdAt: true,
+        userAchievements: {
+          orderBy: { unlockedAt: 'desc' },
+          include: {
+            achievement: true
+          }
+        },
+        purchases: {
+          orderBy: { createdAt: 'desc' },
+          include: {
+            reward: { select: { id: true, title: true, imageUrl: true, emoji: true, category: true, rarity: true } }
+          }
+        },
+        _count: {
+          select: { userAchievements: true, purchases: true }
+        }
+      }
+    });
+
+    if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+    // Calcular rank global
+    const allStudents = await prisma.user.findMany({
+      where: { role: 'STUDENT' },
+      orderBy: { xp: 'desc' },
+      select: { id: true }
+    });
+    const rankPosition = allStudents.findIndex(u => u.id === userId) + 1;
+
+    // Stats completas de atividades
+    const activityStats = await prisma.activitySubmission.aggregate({
+      where: { userId, status: { in: ['APPROVED', 'GRADED'] } },
+      _count: { id: true },
+      _sum: { xpAwarded: true, coinsAwarded: true }
+    });
+    const totalSubmissions = await prisma.activitySubmission.count({ where: { userId } });
+    const correctSubmissions = activityStats._count.id;
+    const hitRate = totalSubmissions > 0 ? Math.round((correctSubmissions / totalSubmissions) * 100) : 0;
+
+    // Amigos (quantidade)
+    const friendsCount = await prisma.friendship.count({
+      where: {
+        status: 'ACCEPTED',
+        OR: [{ senderId: userId }, { receiverId: userId }]
+      }
+    });
+
+    // Atividades recentes
+    const recentActivity = await prisma.activitySubmission.findMany({
+      where: { userId },
+      orderBy: { submittedAt: 'desc' },
+      take: 10,
+      include: {
+        activity: { select: { title: true, subject: true, type: true } }
+      }
+    });
+
+    const { currentLevelXp, nextLevelXp } = calculateLevel(user.xp);
+
+    res.json({
+      ...user,
+      rankPosition,
+      friendsCount,
+      levelInfo: { level: user.level, currentLevelXp, nextLevelXp },
+      activityStats: {
+        total: totalSubmissions,
+        correct: correctSubmissions,
+        hitRate,
+        xpEarned: activityStats._sum.xpAwarded || 0,
+        coinsEarned: activityStats._sum.coinsAwarded || 0,
+      },
+      recentActivity
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao buscar perfil completo.' });
+  }
+};
+
+module.exports = { awardXP, awardCoins, checkAchievements, calculateLevel, getProfile, updateProfile, equipAura, equipAccessory, getPublicProfile, getMyFullProfile };
